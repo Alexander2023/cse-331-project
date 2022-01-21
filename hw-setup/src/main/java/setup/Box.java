@@ -73,7 +73,7 @@ public class Box implements Iterable<Ball> {
      * @spec.requires b != null.
      */
     public boolean add(Ball b) {
-        if (getVolume() == maxVolume) {
+        if (getVolume() == maxVolume || getVolume() + b.getVolume() > maxVolume) {
             return false;
         }
 
