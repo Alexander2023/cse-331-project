@@ -13,6 +13,10 @@ package setup;
 
 import java.lang.Iterable;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * This is a container can be used to contain Balls. The key
@@ -20,6 +24,11 @@ import java.util.Iterator;
  * finite volume. Once a box is full, a client cannot put in more Balls.
  */
 public class Box implements Iterable<Ball> {
+
+    /**
+     * maxVolume is used to ensure the volume for this Box is finite
+     */
+    private double maxVolume;
 
     /**
      * ballContainer is used to internally store balls for this Box
@@ -32,8 +41,8 @@ public class Box implements Iterable<Ball> {
      * @param maxVolume Total volume of balls that this box can contain.
      */
     public Box(double maxVolume) {
-        // Your code goes here.  Remove the exception after you're done.
-        throw new RuntimeException("Method not implemented");
+        this.maxVolume = maxVolume;
+        this.ballContainer = new BallContainer();
     }
 
     /**
@@ -64,8 +73,11 @@ public class Box implements Iterable<Ball> {
      * @spec.requires b != null.
      */
     public boolean add(Ball b) {
-        // Your code goes here.  Remove the exception after you're done.
-        throw new RuntimeException("Method not implemented");
+        if (getVolume() == maxVolume) {
+            return false;
+        }
+
+        return ballContainer.add(b);
     }
 
     /**
@@ -77,8 +89,26 @@ public class Box implements Iterable<Ball> {
      * ascending size.
      */
     public Iterator<Ball> getBallsFromSmallest() {
-        // Your code goes here.  Remove the exception after you're done.
-        throw new RuntimeException("Method not implemented");
+        List<Ball> list = new ArrayList<>();
+        
+        for (Ball b : ballContainer) {
+            list.add(b);
+        }
+
+        Collections.sort(list, new Comparator<Ball>() {
+            @Override
+            public int compare(Ball b1, Ball b2) {
+                if (Math.abs(b1.getVolume() - b2.getVolume()) < 0.0001) {
+                    return 0;
+                } else if (b1.getVolume() > b2.getVolume()) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        });
+
+        return list.iterator();
     }
 
     /**
