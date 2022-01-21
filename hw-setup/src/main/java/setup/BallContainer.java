@@ -26,6 +26,11 @@ public class BallContainer implements Iterable<Ball> {
     private Set<Ball> contents;
 
     /**
+     * Volume of all Balls in the BallContainer
+     */
+    private double totalVolume;
+
+    /**
      * Constructor that creates a new BallContainer.
      */
     public BallContainer() {
@@ -37,6 +42,7 @@ public class BallContainer implements Iterable<Ball> {
         // operator is used where the compiler can infer what the type should be
         // based on other information.
         contents = new HashSet<>();
+        totalVolume = 0.0;
     }
 
     /**
@@ -71,7 +77,13 @@ public class BallContainer implements Iterable<Ball> {
      * @spec.requires b != null.
      */
     public boolean add(Ball b) {
-        return contents.add(b);
+        boolean isAdded = contents.add(b);
+
+        if (isAdded) {
+            totalVolume += b.getVolume();
+        }
+
+        return isAdded;
     }
 
     /**
@@ -88,7 +100,13 @@ public class BallContainer implements Iterable<Ball> {
      * @spec.requires b != null.
      */
     public boolean remove(Ball b) {
-        return contents.remove(b);
+        boolean isRemoved = contents.remove(b);
+
+        if (isRemoved) {
+            totalVolume -= b.getVolume();
+        }
+
+        return isRemoved;
     }
 
     /**
@@ -98,11 +116,7 @@ public class BallContainer implements Iterable<Ball> {
      * @return the volume of the contents of the container.
      */
     public double getVolume() {
-        double volume = 0.0;
-        for (Ball b : contents) {
-            volume += b.getVolume();
-        }
-        return volume;
+        return totalVolume;
     }
 
     /**
@@ -119,6 +133,7 @@ public class BallContainer implements Iterable<Ball> {
      */
     public void clear() {
         contents.clear();
+        totalVolume = 0.0;
     }
 
     /**
