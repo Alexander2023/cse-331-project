@@ -4,15 +4,25 @@
 1. Why did Fibonacci fail the testThrowsIllegalArgumentException< test? What (if anything) did
 you have to do to fix it? If you did not have to change anything to fix this issue, explain why.
 
-
+Fibonacci failed this test because zero was being treated as a negative number when it
+is actually nonnegative. I had to change the conditional in the if statement to be < 0 rather
+than <= 0 so that an exception is only thrown when a negative number is passed as an argument.
 
 2. Why did Fibonacci fail the testBaseCase test? What (if anything) did you have to do to fix
 it? If you did not have to change anything to fix this issue, explain why.
 
-
+Fibonacci failed the test because when zero was passed as an argument, it entered the if statement
+for negative numbers when it should have entered the base case if/else statement for n < 2. I had
+to fix the conditional for negative numbers from <= 0 to < 0 which then fixed the negative number
+and base case test.
 
 3.Why did Fibonacci fail the testInductiveCase test? What (if anything) did you have to do to
 fix it? If you did not have to change anything to fix this issue, explain why.
 
+Fibonacci failed the test because when two was passed as an argument, it entered the base case when
+it should've entered the recursive case, and because the recursive case was returning the difference
+of its recursive calls rather than their sum. I had to change the base case conditional from <= 2 to < 2
+since our intended base cases are n = 0 and n = 1. I also changed the operator from minus to plus to get
+the sum.
 
 
