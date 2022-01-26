@@ -81,8 +81,15 @@ public final class RatTerm {
      * t.expt = 0, otherwise t.expt = e
      */
     public RatTerm(RatNum c, int e) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatTerm.constructor is not yet implemented");
+        coeff = c;
+
+        if (coeff.equals(RatNum.ZERO)) {
+            expt = 0;
+        } else {
+            expt = e;
+        }
+
+        checkRep();
     }
 
     /**
@@ -91,8 +98,8 @@ public final class RatTerm {
      * @return the coefficient of this RatTerm
      */
     public RatNum getCoeff() {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatTerm.getCoeff() is not yet implemented");
+        checkRep();
+        return coeff; // Should we call checkRep twice in methods like these?
     }
 
     /**
@@ -101,8 +108,8 @@ public final class RatTerm {
      * @return the exponent of this RatTerm
      */
     public int getExpt() {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatTerm.getExpt() is not yet implemented");
+        checkRep();
+        return expt;
     }
 
     /**
@@ -111,8 +118,8 @@ public final class RatTerm {
      * @return true if and only if this has NaN as a coefficient
      */
     public boolean isNaN() {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatTerm.isNaN() is not yet implemented");
+        checkRep();
+        return coeff.isNaN();
     }
 
     /**
@@ -121,8 +128,8 @@ public final class RatTerm {
      * @return true if and only if this has zero as a coefficient
      */
     public boolean isZero() {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatTerm.isZero() is not yet implemented");
+        checkRep();
+        return coeff.equals(RatNum.ZERO); // Does this count as a complex return statement (i.e. add checkRep after)?
     }
 
     /**
@@ -133,9 +140,18 @@ public final class RatTerm {
      * is 12. if (this.isNaN() == true), return Double.NaN
      */
     public double eval(double d) {
-        // TODO: Fill in this method, then remove the RuntimeException
         // Hint: You may find java.lang.Math's pow() method useful.
-        throw new RuntimeException("RatTerm.eval() is not yet implemented");
+        checkRep();
+
+        if (isNaN()) {
+            return Double.NaN;
+        }
+
+        double val = coeff.doubleValue() * Math.pow(d, expt);
+
+        checkRep();
+
+        return val;
     }
 
     /**
@@ -144,8 +160,17 @@ public final class RatTerm {
      * @return a RatTerm equals to (-this). If this is NaN, then returns NaN.
      */
     public RatTerm negate() {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatTerm.negate() is not yet implemented");
+        checkRep();
+
+        if (isNaN()) {
+            return NaN;
+        }
+
+        RatTerm negated = new RatTerm(coeff.negate(), expt);
+
+        checkRep();
+
+        return negated;
     }
 
     /**
@@ -158,8 +183,26 @@ public final class RatTerm {
      * @spec.requires arg != null
      */
     public RatTerm add(RatTerm arg) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatTerm.add() is not yet implemented");
+        checkRep();
+
+        // Is it better to access directly or call getExpt()
+        if (expt != arg.expt && !isZero() && !isNaN() && !arg.isZero() && !arg.isNaN()) { // Check condition
+            throw new IllegalArgumentException();
+        }
+
+        if (isNaN() || arg.isNaN()) {
+            return NaN;
+        }
+
+        if (isZero()) { // Should we add more checkReps for early returns or try to carry down?
+            return arg;
+        }
+
+        RatTerm sum = new RatTerm(coeff.add(arg.coeff), expt);
+
+        checkRep();
+
+        return sum;
     }
 
     /**
@@ -172,8 +215,14 @@ public final class RatTerm {
      * @spec.requires arg != null
      */
     public RatTerm sub(RatTerm arg) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatTerm.sub() is not yet implemented");
+        checkRep();
+
+        // Is it safe to rely on other specs exceptions or is this too closely coupled? RatNum did the same
+        RatTerm difference = add(arg.negate());
+
+        checkRep();
+
+        return difference;
     }
 
     /**
@@ -184,8 +233,17 @@ public final class RatTerm {
      * @spec.requires arg != null
      */
     public RatTerm mul(RatTerm arg) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatTerm.mul() is not yet implemented");
+        checkRep();
+
+        if (isNaN() || arg.isNaN()) {
+            return NaN;
+        }
+
+        RatTerm product = new RatTerm(coeff.mul(arg.coeff), expt + arg.expt);
+
+        checkRep();
+
+        return product;
     }
 
     /**
@@ -197,8 +255,17 @@ public final class RatTerm {
      * @spec.requires arg != null
      */
     public RatTerm div(RatTerm arg) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("RatTerm.div() is not yet implemented");
+        checkRep();
+
+        if (arg.isZero() || isNaN() || arg.isNaN()) {
+            return NaN;
+        }
+
+        RatTerm quotient = new RatTerm(coeff.div(arg.coeff), expt - arg.expt);
+
+        checkRep();
+
+        return quotient;
     }
 
     /**
