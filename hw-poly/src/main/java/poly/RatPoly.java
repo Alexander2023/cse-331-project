@@ -92,8 +92,7 @@ public final class RatPoly {
      * @spec.effects Constructs a new Poly, "0".
      */
     public RatPoly() {
-        // Is an arraylist fine?
-        terms = new ArrayList<>(); // Should we call other constructor by passing constant?
+        this(RatTerm.ZERO);
         checkRep();
     }
 
@@ -103,10 +102,12 @@ public final class RatPoly {
      * @spec.effects Constructs a new Poly equal to "rt". If rt.isZero(), constructs a "0" polynomial.
      */
     public RatPoly(RatTerm rt) {
-        terms = new ArrayList<>(); // Should we be calling this
+        terms = new ArrayList<>();
+
         if (!rt.isZero()) {
             terms.add(rt);
         }
+
         checkRep();
     }
 
@@ -144,6 +145,7 @@ public final class RatPoly {
         checkRep();
 
         if (terms.isEmpty()) {
+            checkRep();
             return 0;
         }
 
@@ -165,8 +167,9 @@ public final class RatPoly {
     public RatTerm getTerm(int deg) {
         checkRep();
 
-        for (RatTerm term : terms) { // Is it worth it to do binary search?
+        for (RatTerm term : terms) { // Is it worth it to do binary search? +=+
             if (deg == term.getExpt()) {
+                checkRep();
                 return term;
             }
         }
@@ -186,6 +189,7 @@ public final class RatPoly {
 
         for (RatTerm term : terms) {
             if (term.isNaN()) {
+                checkRep();
                 return true;
             }
         }
@@ -207,8 +211,7 @@ public final class RatPoly {
      * @see RatTerm regarding (C . E) notation
      */
     private static void scaleCoeff(List<RatTerm> lst, RatNum scalar) {
-        // Do not leave this method as-is. You must either use it somehow or remove it.
-        for (int i = 0; i < lst.size(); i++) { // Should we not worry about checkRep
+        for (int i = 0; i < lst.size(); i++) {
             RatTerm previous = lst.get(i);
             lst.set(i, new RatTerm(previous.getCoeff().mul(scalar), previous.getExpt()));
         }
@@ -253,8 +256,8 @@ public final class RatPoly {
      */
     private static void sortedInsert(List<RatTerm> lst, RatTerm newTerm) {
         // Note: Some of the provided code in this class relies on this method working as-specified.
-        if (newTerm.isZero()) {
-            return; // Check
+        if (newTerm.isZero()) { // Should we leave the comment above? +=+
+            return; // Good style? +=+
         }
 
         int i = 0;
@@ -264,10 +267,10 @@ public final class RatPoly {
 
         if (i == lst.size()) {
             lst.add(newTerm);
-            return; // Is this or if/else preferred?
+            return;
         }
 
-        if (newTerm.getExpt() == lst.get(i).getExpt()) { // Is this case possible?
+        if (newTerm.getExpt() == lst.get(i).getExpt()) {
             lst.set(i, lst.get(i).add(newTerm));
         } else {
             lst.add(i, newTerm);
@@ -284,6 +287,7 @@ public final class RatPoly {
         checkRep();
 
         if (isNaN()) {
+            checkRep();
             return NaN;
         }
 
@@ -307,11 +311,12 @@ public final class RatPoly {
         checkRep();
 
         if (isNaN() || p.isNaN()) {
-            return NaN; // Is this what was meant? multiple ways
+            checkRep();
+            return NaN; // By some does that imply that we don't care which NaN it is? +=+
+            // Do we still have to satisfy the condition of r = this + p? Since any poly w/ NaN would reduce to NaN
         }
 
-        // Can we do shallow copies when elements are immutable? should be fine
-        RatPoly r = new RatPoly(new ArrayList<>(p.terms)); // What is the point of other constructor?
+        RatPoly r = new RatPoly(new ArrayList<>(p.terms));
         for (int i = 0; i < terms.size(); i++) {
             boolean hasSameExponent = false;
 
@@ -351,6 +356,7 @@ public final class RatPoly {
         checkRep();
 
         if (isNaN() || p.isNaN()) {
+            checkRep();
             return NaN;
         }
 
@@ -373,6 +379,7 @@ public final class RatPoly {
         checkRep();
 
         if (isNaN() || p.isNaN()) {
+            checkRep();
             return NaN;
         }
 
@@ -426,15 +433,14 @@ public final class RatPoly {
         checkRep();
 
         if (p.equals(ZERO) || isNaN() || p.isNaN()) {
+            checkRep();
             return NaN;
         }
 
         RatPoly quotient = new RatPoly();
 
         RatPoly temp = new RatPoly(new ArrayList<>(terms));
-        // Is p already sorted?
-
-
+        // Is p already sorted? +=+
 
         while (!temp.terms.isEmpty() && !p.terms.isEmpty() && temp.degree() >= p.degree()) {
             RatTerm quotientTerm = temp.getTerm(temp.degree()).div(p.getTerm(p.degree()));
@@ -475,6 +481,7 @@ public final class RatPoly {
         checkRep();
 
         if (isNaN()) {
+            checkRep();
             return Double.NaN;
         }
 

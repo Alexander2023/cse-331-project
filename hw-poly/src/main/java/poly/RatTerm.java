@@ -99,7 +99,7 @@ public final class RatTerm {
      */
     public RatNum getCoeff() {
         checkRep();
-        return coeff; // Should we call checkRep twice in methods like these?
+        return coeff;
     }
 
     /**
@@ -119,7 +119,7 @@ public final class RatTerm {
      */
     public boolean isNaN() {
         checkRep();
-        return coeff.isNaN();
+        return coeff.isNaN(); // If a field calls one of its methods, should we use another checkRep? +=+
     }
 
     /**
@@ -129,7 +129,12 @@ public final class RatTerm {
      */
     public boolean isZero() {
         checkRep();
-        return coeff.equals(RatNum.ZERO); // Does this count as a complex return statement (i.e. add checkRep after)?
+
+        boolean result = coeff.equals(RatNum.ZERO);
+
+        checkRep();
+
+        return result;
     }
 
     /**
@@ -140,10 +145,10 @@ public final class RatTerm {
      * is 12. if (this.isNaN() == true), return Double.NaN
      */
     public double eval(double d) {
-        // Hint: You may find java.lang.Math's pow() method useful.
         checkRep();
 
         if (isNaN()) {
+            checkRep(); // Are these necessary here? Or should we assume other method may not call checkRep? +=+
             return Double.NaN;
         }
 
@@ -163,6 +168,7 @@ public final class RatTerm {
         checkRep();
 
         if (isNaN()) {
+            checkRep();
             return NaN;
         }
 
@@ -185,16 +191,17 @@ public final class RatTerm {
     public RatTerm add(RatTerm arg) {
         checkRep();
 
-        // Is it better to access directly or call getExpt()
-        if (expt != arg.expt && !isZero() && !isNaN() && !arg.isZero() && !arg.isNaN()) { // Check condition
-            throw new IllegalArgumentException();
+        if (expt != arg.expt && !isZero() && !isNaN() && !arg.isZero() && !arg.isNaN()) {
+            throw new IllegalArgumentException(); // Should we call checkRep before throws? +=+
         }
 
         if (isNaN() || arg.isNaN()) {
+            checkRep();
             return NaN;
         }
 
-        if (isZero()) { // Should we add more checkReps for early returns or try to carry down?
+        if (isZero()) {
+            checkRep();
             return arg;
         }
 
@@ -217,7 +224,7 @@ public final class RatTerm {
     public RatTerm sub(RatTerm arg) {
         checkRep();
 
-        // Is it safe to rely on other specs exceptions or is this too closely coupled? RatNum did the same
+        // Is it safe to rely on other specs exceptions or is this too closely coupled? RatNum did the same. +=+
         RatTerm difference = add(arg.negate());
 
         checkRep();
@@ -236,6 +243,7 @@ public final class RatTerm {
         checkRep();
 
         if (isNaN() || arg.isNaN()) {
+            checkRep();
             return NaN;
         }
 
@@ -258,6 +266,7 @@ public final class RatTerm {
         checkRep();
 
         if (arg.isZero() || isNaN() || arg.isNaN()) {
+            checkRep();
             return NaN;
         }
 
@@ -381,7 +390,7 @@ public final class RatTerm {
      */
     @Override
     public int hashCode() {
-        if(this.isNaN()) {
+        if(this.isNaN()) { // Is it better to use this. or the method itself? +=+
             return 0;
         }
         return (coeff.hashCode() * 7) + (expt * 43);

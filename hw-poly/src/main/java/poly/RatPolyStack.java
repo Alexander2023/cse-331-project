@@ -68,7 +68,7 @@ public final class RatPolyStack implements Iterable<RatPoly> {
      */
     public int size() {
         checkRep();
-    	return polys.size();
+    	return polys.size(); // Would this count as a complex return? +=+
     }
 
     /**
