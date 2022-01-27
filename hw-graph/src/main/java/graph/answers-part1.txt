@@ -1,0 +1,81 @@
+## CSE 331 hw-graph Part 1 Questions
+
+## Part 1
+###########################################################################
+
+a. Write an AF and RI for IntQueue1 and IntQueue2.
+
+    ### IntQueue1
+
+    Abstraction Function:
+
+
+
+    Representation Invariant:
+
+
+
+
+    ### IntQueue2
+
+    Abstraction Function:
+
+
+
+    Representation Invariant:
+
+
+
+
+b. Group the snapshots of IntQueue2's internal state into groups that have the same abstract state.
+
+
+
+
+c. For each signature below, state and justify in 1-2 sentences (per part) whether the method or constructor
+could possibly expose the representation, given the information available. Explain any assumptions you made.
+
+    1. `public int solveEquations(int x, int y, int z)`
+
+
+
+    2. `public String[] decode(boolean slowly)`
+
+
+
+    3. `private Date myBirthday()`
+
+
+
+    4. `public String toString()`
+
+
+
+    5. `public Iterator<Integer> elements()`
+
+
+
+    6. `public Deck(List<Card> cards)`
+
+
+
+
+## Part 2
+###########################################################################
+
+Briefly explain why you included the operations you did and why you feel they are a sufficient
+interface to a graph. If your design includes multiple classes or interfaces, explain why you
+included each one; if not, explain whether you considered additional classes and why you decided
+not to include them.
+
+
+
+
+## Part 3
+###########################################################################
+
+What was your testing strategy for this assignment? How do your script tests and JUnit tests
+differ from each other (if they do), and why?
+
+
+
