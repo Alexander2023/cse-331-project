@@ -4,16 +4,79 @@
 
 1. Multiplication Pseudocode
 
-
+r = p * q:
+    { Inv: r = p_0 * q + p_1 * q + ... + p_(i - 1) * q, where p_i is the ith term in p }
+    foreach term, t_p in p:
+        { Inv2: q = q_0 + q_1 + ... + q_(j - 1), q_j is the jth term in q }
+        foreach term, t_q in q:
+            insert the product of t_p and t_q as a new term in r
 
 2. Division Pseudocode
 
-
+r = p / q:
+    set s = p by making a term-by-term copy of all terms in p to s
+    sort s in descending order of degrees
+    sort q in descending order of degrees
+    { Inv: s = s_init - (q * s_0 + q * s_1 + ... + q * s_(i - 1), s_i is the ith term in s }
+    while largest degree of s >= largest degree of q
+        set quotientTerm = largest term of s / largest term of q
+        insert quotientTerm into r
+        { Inv2: q = q_0 + q_1 + ... + q_(j - 1), q_j is the jth term in q }
+        foreach term, t_q in q:
+            set product = the product of quotientTerm and t_q
+            if any term, t_s, in s has the same degree as product,
+                then replace t_s with the difference of t_s and product
+                else insert the difference of 0 and product as a new term in s in correct sorted position
 
 3. Division Example: (x3+x-1) / (x+1) = x2-x+2
 
-
-
+p = (x^3 + x - 1)
+q = (x + 1)
+s = copy of p = (x^3 + x - 1)
+while largest degree of s >= largest degree of q
+    Iteration 1: s = (x^3 + x - 1), p = (x^3 + x - 1), q = (x + 1), r = null
+        [set quotientTerm = largest term of s / largest term of q] quotientTerm = x^3 / x = x^2
+        [insert quotientTerm into r] r = (x^2)
+        foreach term, t_q in q
+            Iteration 1: t_q = x, s = (x^3 + x - 1), p = (x^3 + x - 1), q = (x + 1), r = (x^2), quotientTerm = x^2
+                [set product = the product of quotientTerm and t_q] product = x^2 * x = x^3
+                [if any term, t_s, in s has the same degree as product] YES, t_s = x^3
+                [then replace t_s with the difference of t_s and product] t_s - product = 0, so now s = (x - 1)
+                [else insert the difference of 0 and product as a new term in s in correct sorted position]
+            Iteration 2: t_q = 1, s = (x - 1), p = (x^3 + x - 1), q = (x + 1), r = (x^2), quotientTerm = x^2
+                [set product = the product of quotientTerm and t_q] product = x^2 * 1 = x^2
+                [if any term, t_s, in s has the same degree as product] NO
+                [then replace t_s with the difference of t_s and product]
+                [else insert the difference of 0 and product as a new term in s in correct sorted position] 0 - product = -x^2, so now s = (-x^2 + x - 1)
+    Iteration 2: s = (-x^2 + x - 1), p = (x^3 + x - 1), q = (x + 1), r = (x^2)
+        [set quotientTerm = largest term of s / largest term of q] quotientTerm = -x^2 / x = -x
+        [insert quotientTerm into r] r = (x^2 - x)
+        foreach term, t_q in q
+            Iteration 1: t_q = x, s = (-x^2 + x - 1), p = (x^3 + x - 1), q = (x + 1), r = (x^2 - x), quotientTerm = -x
+                [set product = the product of quotientTerm and t_q] product = -x * x = -x^2
+                [if any term, t_s, in s has the same degree as product] YES, t_s = -x^2
+                [then replace t_s with the difference of t_s and product] t_s - product = 0, so now s = (x - 1)
+                [else insert the difference of 0 and product as a new term in s in correct sorted position]
+            Iteration 2: t_q = 1, s = (x - 1), p = (x^3 + x - 1), q = (x + 1), r = (x^2 - x), quotientTerm = -x
+                [set product = the product of quotientTerm and t_q] product = -x * 1 = -x
+                [if any term, t_s, in s has the same degree as product] YES, t_s = x
+                [then replace t_s with the difference of t_s and product] t_s - product = 2x, so now s = (2x - 1)
+                [else insert the difference of 0 and product as a new term in s in correct sorted position]
+    Iteration 3: s = (2x - 1), p = (x^3 + x - 1), q = (x + 1), r = (x^2 - x)
+        [set quotientTerm = largest term of s / largest term of q] quotientTerm = 2x / x = 2
+        [insert quotientTerm into r] r = (x^2 - x + 2)
+        foreach term, t_q in q
+            Iteration 1: t_q = x, s = (2x - 1), p = (x^3 + x - 1), q = (x + 1), r = (x^2 - x + 2), quotientTerm = 2
+                [set product = the product of quotientTerm and t_q] product = 2 * x = 2x
+                [if any term, t_s, in s has the same degree as product] YES, t_s = 2x
+                [then replace t_s with the difference of t_s and product] t_s - product = 0, so now s = (1)
+                [else insert the difference of 0 and product as a new term in s in correct sorted position]
+            Iteration 2: t_q = 1, s = (1), p = (x^3 + x - 1), q = (x + 1), r = (x^2 - x + 2), quotientTerm = 2
+                [set product = the product of quotientTerm and t_q] product = 2 * 1 = 2
+                [if any term, t_s, in s has the same degree as product] YES, t_s = 1
+                [then replace t_s with the difference of t_s and product] t_s - product = -1, so now s = (-1)
+                [else insert the difference of 0 and product as a new term in s in correct sorted position]
+We are done! r = (x^2 - x + 2)
 
 ## Part 1
 ###########################################################################
@@ -24,11 +87,14 @@
 
 2. Alternate add, sub, mul, div
 
+We lose the immutability of our class, we don't set to the reduced form as in the constructor,
+and our rep may be broken since it is not getting checked.
+NAN concern?
 
 
 3. Constructor checkReps
 
-
+Sufficient b/c our representation has not been established yet so it can't be broken
 
 
 ## Part 2
