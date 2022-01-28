@@ -221,23 +221,6 @@ public final class RatPoly {
     }
 
     /**
-     * Increments exponents within 'lst' by 'degree' (helper procedure).
-     *
-     * @param lst    the RatTerms whose exponents are to be incremented
-     * @param degree the value by which to increment exponents in lst
-     * @spec.requires lst != null
-     * @spec.modifies lst
-     * @spec.effects Forall i s.t. 0 <= i < lst.size(), if (C . E) = lst.get(i) then lst_post.get(i) =
-     * (C . E+degree)
-     * @see RatTerm regarding (C . E) notation
-     */
-    private static void incremExpt(List<RatTerm> lst, int degree) {
-        // TODO: Fill in this method as specified, modify it to your liking, or remove it.
-        // Do not leave this method as-is. You must either use it somehow or remove it.
-        throw new RuntimeException("RatPoly.incremExpt() is not yet implemented");
-    }
-
-    /**
      * Inserts a term into a sorted sequence of terms, preserving the sorted nature of the sequence. 
      * If a term with the given degree already exists, adds their coefficients (helper procedure).
      *
@@ -317,8 +300,7 @@ public final class RatPoly {
 
         if (isNaN() || p.isNaN()) {
             checkRep();
-            return NaN; // By 'some' does that imply that we don't care which NaN it is? +=+
-            // Do we still have to satisfy the condition of r = this + p? Since any poly w/ NaN would reduce to NaN
+            return NaN;
         }
 
         RatPoly sum = new RatPoly(new ArrayList<>(p.terms));
