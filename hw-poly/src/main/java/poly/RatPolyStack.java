@@ -68,7 +68,12 @@ public final class RatPolyStack implements Iterable<RatPoly> {
      */
     public int size() {
         checkRep();
-    	return polys.size(); // Would this count as a complex return? +=+
+
+        int size = polys.size();
+
+        checkRep();
+
+    	return size;
     }
 
     /**
@@ -163,17 +168,7 @@ public final class RatPolyStack implements Iterable<RatPoly> {
     public RatPoly getNthFromTop(int index) {
         checkRep();
 
-        Stack<RatPoly> temp = new Stack<>();
-        while (index > 0) {
-            temp.push(polys.pop());
-            index--;
-        }
-
-        RatPoly result = polys.peek();
-
-        while (!temp.isEmpty()) {
-            polys.push(temp.pop());
-        }
+        RatPoly result = polys.get(polys.size() - 1 - index);
 
         checkRep();
 

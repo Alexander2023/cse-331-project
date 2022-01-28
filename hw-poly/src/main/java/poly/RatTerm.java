@@ -119,7 +119,12 @@ public final class RatTerm {
      */
     public boolean isNaN() {
         checkRep();
-        return coeff.isNaN(); // If a field calls one of its methods, should we use another checkRep? +=+
+
+        boolean result = coeff.isNaN();
+
+        checkRep();
+
+        return result;
     }
 
     /**
@@ -148,7 +153,7 @@ public final class RatTerm {
         checkRep();
 
         if (isNaN()) {
-            checkRep(); // Are these necessary here? Or should we assume other method may not call checkRep? +=+
+            checkRep();
             return Double.NaN;
         }
 
@@ -192,7 +197,8 @@ public final class RatTerm {
         checkRep();
 
         if (expt != arg.expt && !isZero() && !isNaN() && !arg.isZero() && !arg.isNaN()) {
-            throw new IllegalArgumentException(); // Should we call checkRep before throws? +=+
+            checkRep();
+            throw new IllegalArgumentException();
         }
 
         if (isNaN() || arg.isNaN()) {
@@ -224,7 +230,6 @@ public final class RatTerm {
     public RatTerm sub(RatTerm arg) {
         checkRep();
 
-        // Is it safe to rely on other specs exceptions or is this too closely coupled? RatNum did the same. +=+
         RatTerm difference = add(arg.negate());
 
         checkRep();
@@ -390,7 +395,7 @@ public final class RatTerm {
      */
     @Override
     public int hashCode() {
-        if(this.isNaN()) { // Is it better to use this. or the method itself? +=+
+        if(this.isNaN()) {
             return 0;
         }
         return (coeff.hashCode() * 7) + (expt * 43);

@@ -167,7 +167,8 @@ public final class RatPoly {
     public RatTerm getTerm(int deg) {
         checkRep();
 
-        for (RatTerm term : terms) { // Is it worth it to do binary search? +=+
+        // Inv: All terms from 0 through i-1 have exponent != deg
+        for (RatTerm term : terms) {
             if (deg == term.getExpt()) {
                 checkRep();
                 return term;
@@ -187,6 +188,7 @@ public final class RatPoly {
     public boolean isNaN() {
         checkRep();
 
+        // Inv: All terms from 0 through i-1 are != NaN
         for (RatTerm term : terms) {
             if (term.isNaN()) {
                 checkRep();
@@ -211,6 +213,7 @@ public final class RatPoly {
      * @see RatTerm regarding (C . E) notation
      */
     private static void scaleCoeff(List<RatTerm> lst, RatNum scalar) {
+        // Inv: All terms from 0 through i-1 have coefficient = scalar * coefficient_pre
         for (int i = 0; i < lst.size(); i++) {
             RatTerm previous = lst.get(i);
             lst.set(i, new RatTerm(previous.getCoeff().mul(scalar), previous.getExpt()));
@@ -255,13 +258,16 @@ public final class RatPoly {
      * cofind(lst,newTerm.getExpt()) + newTerm.getCoeff())
      */
     private static void sortedInsert(List<RatTerm> lst, RatTerm newTerm) {
-        // Note: Some of the provided code in this class relies on this method working as-specified.
-        if (newTerm.isZero()) { // Should we leave the comment above? +=+
-            return; // Good style? +=+
+        if (newTerm.isZero()) {
+            return;
         }
 
         int i = 0;
-        while (i < lst.size() && newTerm.getExpt() < lst.get(i).getExpt()) {
+        // Inv: All terms from 0 through i-1 have exponent > newTerm exponent
+        while (i < lst.size()) {
+            if (lst.get(i).getExpt() <= newTerm.getExpt()) {
+                break;
+            }
             i++;
         }
 
@@ -283,7 +289,6 @@ public final class RatPoly {
      * @return a RatPoly equal to "0 - this"; if this.isNaN(), returns some r such that r.isNaN()
      */
     public RatPoly negate() {
-        // Note: Some of the provided code in this class relies on this method working as-specified.
         checkRep();
 
         if (isNaN()) {
@@ -312,35 +317,30 @@ public final class RatPoly {
 
         if (isNaN() || p.isNaN()) {
             checkRep();
-            return NaN; // By some does that imply that we don't care which NaN it is? +=+
+            return NaN; // By 'some' does that imply that we don't care which NaN it is? +=+
             // Do we still have to satisfy the condition of r = this + p? Since any poly w/ NaN would reduce to NaN
         }
 
-        RatPoly r = new RatPoly(new ArrayList<>(p.terms));
+        RatPoly sum = new RatPoly(new ArrayList<>(p.terms));
+        // Inv: sum = p + q_0 + q_1 + ... + q_(i-1), where q_i is the ith term in this
         for (int i = 0; i < terms.size(); i++) {
-            boolean hasSameExponent = false;
+            RatTerm termWithSameExpt = sum.getTerm(terms.get(i).getExpt());
+            int index = sum.terms.indexOf(termWithSameExpt);
 
-            int initSize = r.terms.size();
-            for (int j = 0; j < initSize; j++) {
-                if (terms.get(i).getExpt() == r.terms.get(j).getExpt()) {
-                    if (terms.get(i).equals(r.terms.get(j).negate())) { // Avoids setting term to 0 in poly
-                        r.terms.remove(j);
-                    } else {
-                        r.terms.set(j, terms.get(i).add(r.terms.get(j)));
-                    }
-                    hasSameExponent = true;
-                    break; // Alt is to update loop var if not removed
+            if (index == -1) {
+                sortedInsert(sum.terms, terms.get(i));
+            } else {
+                if (terms.get(i).equals(sum.terms.get(index).negate())) {
+                    sum.terms.remove(index); // Avoids setting coefficient to 0 in polynomial
+                } else {
+                    sum.terms.set(index, terms.get(i).add(sum.terms.get(index)));
                 }
-            }
-
-            if (!hasSameExponent) {
-                sortedInsert(r.terms, terms.get(i));
             }
         }
 
         checkRep();
 
-        return r;
+        return sum;
     }
 
     /**
@@ -352,7 +352,6 @@ public final class RatPoly {
      * @spec.requires p != null
      */
     public RatPoly sub(RatPoly p) {
-        // Note: Some of the provided code in this class relies on this method working as-specified.
         checkRep();
 
         if (isNaN() || p.isNaN()) {
@@ -385,7 +384,11 @@ public final class RatPoly {
 
         RatPoly product = new RatPoly();
 
+        // Inv: product = q_0 * p + q_1 * p + ... + q_(i-1) * p,
+        // where q_i is the ith term in this
         for (RatTerm term : terms) {
+            // Inv: product = q_0 * p + q_1 * p + ... + q_i * (p_0 + p_1 + ... + p_(j-1)),
+            // where p_j is the jth term in p
             for (RatTerm otherTerm : p.terms) {
                 sortedInsert(product.terms, term.mul(otherTerm));
             }
@@ -440,26 +443,29 @@ public final class RatPoly {
         RatPoly quotient = new RatPoly();
 
         RatPoly temp = new RatPoly(new ArrayList<>(terms));
-        // Is p already sorted? +=+
 
-        while (!temp.terms.isEmpty() && !p.terms.isEmpty() && temp.degree() >= p.degree()) {
+        // Inv: quotient = temp_0 / p_0 + temp_1 / p_1 + ... + temp_(i-1) / p_(i-1),
+        // where temp_i is the term with max degree in temp on ith iteration and
+        // p_i is the term with max degree in p on ith iteration
+        while (!temp.terms.isEmpty() && temp.degree() >= p.degree()) {
             RatTerm quotientTerm = temp.getTerm(temp.degree()).div(p.getTerm(p.degree()));
             sortedInsert(quotient.terms, quotientTerm);
+
+            // Inv: temp = temp_pre - (p_0 * quotientTerm + p_1 * quotientTerm + ... + p_(i-1) * quotientTerm),
+            // where p_i is the ith term in p
             for (RatTerm term : p.terms) {
                 RatTerm productTerm = term.mul(quotientTerm);
 
-                int i = 0;
-                while (i < temp.terms.size() && temp.terms.get(i).getExpt() != productTerm.getExpt()) {
-                    i++;
-                }
+                RatTerm termWithSameExp = temp.getTerm(productTerm.getExpt());
+                int index = temp.terms.indexOf(termWithSameExp);
 
-                if (i == temp.terms.size()) {
+                if (index == -1) {
                     sortedInsert(temp.terms, productTerm.negate());
                 } else {
-                    if (temp.terms.get(i).equals(productTerm)) { // Check
-                        temp.terms.remove(i);
+                    if (temp.terms.get(index).equals(productTerm)) {
+                        temp.terms.remove(index); // Avoids setting coefficient to 0 in polynomial
                     } else {
-                        temp.terms.set(i, temp.terms.get(i).sub(productTerm));
+                        temp.terms.set(index, temp.terms.get(index).sub(productTerm));
                     }
                 }
             }
@@ -486,6 +492,9 @@ public final class RatPoly {
         }
 
         double result = 0.0;
+        // Inv: result = p_0.c * d ^ p_0.e + p_1.c * d ^ p_1.e + ... + p_(i-1).c * d ^ p_(i-1).e,
+        // where p_i.c is the coefficient of the ith term of p and p_i.e is the exponent of the
+        // ith term of p
         for (RatTerm term : terms) {
             result += term.getCoeff().doubleValue() * Math.pow(d, term.getExpt());
         }
