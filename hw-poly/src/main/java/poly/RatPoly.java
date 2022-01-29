@@ -424,30 +424,30 @@ public final class RatPoly {
 
         RatPoly quotient = new RatPoly();
 
-        RatPoly temp = new RatPoly(new ArrayList<>(terms));
+        RatPoly thisCopy = new RatPoly(new ArrayList<>(terms));
 
-        // Inv: quotient = temp_0 / p_0 + temp_1 / p_1 + ... + temp_(i-1) / p_(i-1),
-        // where temp_i is the term with max degree in temp on ith iteration and
+        // Inv: quotient = thisCopy_0 / p_0 + thisCopy_1 / p_1 + ... + thisCopy_(i-1) / p_(i-1),
+        // where thisCopy_i is the term with max degree in thisCopy on ith iteration and
         // p_i is the term with max degree in p on ith iteration
-        while (!temp.terms.isEmpty() && temp.degree() >= p.degree()) {
-            RatTerm quotientTerm = temp.getTerm(temp.degree()).div(p.getTerm(p.degree()));
+        while (!thisCopy.terms.isEmpty() && thisCopy.degree() >= p.degree()) {
+            RatTerm quotientTerm = thisCopy.getTerm(thisCopy.degree()).div(p.getTerm(p.degree()));
             sortedInsert(quotient.terms, quotientTerm);
 
-            // Inv: temp = temp_pre - (p_0 * quotientTerm + p_1 * quotientTerm + ... + p_(i-1) * quotientTerm),
-            // where p_i is the ith term in p
+            // Inv: thisCopy = thisCopy_pre - (p_0 * quotientTerm + p_1 * quotientTerm + ... + p_(j-1) * quotientTerm),
+            // where p_j is the jth term in p and thisCopy_pre is the value of thisCopy before this loop
             for (RatTerm term : p.terms) {
                 RatTerm productTerm = term.mul(quotientTerm);
 
-                RatTerm termWithSameExp = temp.getTerm(productTerm.getExpt());
-                int index = temp.terms.indexOf(termWithSameExp);
+                RatTerm termWithSameExp = thisCopy.getTerm(productTerm.getExpt());
+                int index = thisCopy.terms.indexOf(termWithSameExp);
 
                 if (index == -1) {
-                    sortedInsert(temp.terms, productTerm.negate());
+                    sortedInsert(thisCopy.terms, productTerm.negate());
                 } else {
-                    if (temp.terms.get(index).equals(productTerm)) {
-                        temp.terms.remove(index); // Avoids setting coefficient to 0 in polynomial
+                    if (thisCopy.terms.get(index).equals(productTerm)) {
+                        thisCopy.terms.remove(index); // Avoids setting coefficient to 0 in polynomial
                     } else {
-                        temp.terms.set(index, temp.terms.get(index).sub(productTerm));
+                        thisCopy.terms.set(index, thisCopy.terms.get(index).sub(productTerm));
                     }
                 }
             }

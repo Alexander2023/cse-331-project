@@ -5,77 +5,79 @@
 1. Multiplication Pseudocode
 
 r = p * q:
-    { Inv: r = p_0 * q + p_1 * q + ... + p_(i - 1) * q, where p_i is the ith term in p }
-    foreach term, t_p in p:
-        { Inv2: q = q_0 + q_1 + ... + q_(j - 1), q_j is the jth term in q }
-        foreach term, t_q in q:
-            insert the product of t_p and t_q as a new term in r
+    { Inv: r = p_0 * q + p_1 * q + ... + p_(i-1) * q, where p_i is the ith term in p }
+    foreach term, t_p, in p:
+        { Inv: r = p_0 * q + p_1 * q + ... + p_i * (q_0 + q_1 + ... + q_(j-1)),
+          where q_j is the jth term in q }
+        foreach term, t_q, in q:
+            insert the product of t_p and t_q into r as a new term
 
 2. Division Pseudocode
 
 r = p / q:
-    set s = p by making a term-by-term copy of all terms in p to s
-    sort s in descending order of degrees
-    sort q in descending order of degrees
-    { Inv: s = s_init - (q * s_0 + q * s_1 + ... + q * s_(i - 1), s_i is the ith term in s }
-    while largest degree of s >= largest degree of q
-        set quotientTerm = largest term of s / largest term of q
-        insert quotientTerm into r
-        { Inv2: q = q_0 + q_1 + ... + q_(j - 1), q_j is the jth term in q }
-        foreach term, t_q in q:
-            set product = the product of quotientTerm and t_q
-            if any term, t_s, in s has the same degree as product,
-                then replace t_s with the difference of t_s and product
-                else insert the difference of 0 and product as a new term in s in correct sorted position
+    set pCopy = p by making a term-by-term copy of all terms in p to pCopy
+    { Inv: r = pCopy_0 / q_0 + pCopy_1 / q_1 + ... + pCopy_(i-1) / q_(i-1), where pCopy_i is the term with
+      max degree in pCopy on ith iteration and q_i is the term with max degree in q on ith iteration }
+    while pCopy is not empty and max degree of term in pCopy, pCopy_i, is >= max degree of term in q, q_i:
+        set quotientTerm = pCopy_i / q_i
+        insert quotientTerm into r as a new term
+        { Inv: pCopy = pCopy_pre - (q_0 * quotientTerm + q_1 * quotientTerm + ... + q_(j-1) * quotientTerm),
+          where q_j is the jth term in q and pCopy_pre is the value of pCopy before this loop }
+        foreach term, t_q, in q:
+            set productTerm = t_q * quotientTerm
+            if any term, t_pCopy, in pCopy has the same degree as productTerm,
+                then replace t_pCopy in pCopy with the difference of t_pCopy and productTerm
+                else insert the difference of 0 and productTerm in pCopy as a new term
 
 3. Division Example: (x3+x-1) / (x+1) = x2-x+2
 
 p = (x^3 + x - 1)
 q = (x + 1)
-s = copy of p = (x^3 + x - 1)
-while largest degree of s >= largest degree of q
-    Iteration 1: s = (x^3 + x - 1), p = (x^3 + x - 1), q = (x + 1), r = null
-        [set quotientTerm = largest term of s / largest term of q] quotientTerm = x^3 / x = x^2
-        [insert quotientTerm into r] r = (x^2)
-        foreach term, t_q in q
-            Iteration 1: t_q = x, s = (x^3 + x - 1), p = (x^3 + x - 1), q = (x + 1), r = (x^2), quotientTerm = x^2
-                [set product = the product of quotientTerm and t_q] product = x^2 * x = x^3
-                [if any term, t_s, in s has the same degree as product] YES, t_s = x^3
-                [then replace t_s with the difference of t_s and product] t_s - product = 0, so now s = (x - 1)
-                [else insert the difference of 0 and product as a new term in s in correct sorted position]
-            Iteration 2: t_q = 1, s = (x - 1), p = (x^3 + x - 1), q = (x + 1), r = (x^2), quotientTerm = x^2
-                [set product = the product of quotientTerm and t_q] product = x^2 * 1 = x^2
-                [if any term, t_s, in s has the same degree as product] NO
-                [then replace t_s with the difference of t_s and product]
-                [else insert the difference of 0 and product as a new term in s in correct sorted position] 0 - product = -x^2, so now s = (-x^2 + x - 1)
-    Iteration 2: s = (-x^2 + x - 1), p = (x^3 + x - 1), q = (x + 1), r = (x^2)
-        [set quotientTerm = largest term of s / largest term of q] quotientTerm = -x^2 / x = -x
-        [insert quotientTerm into r] r = (x^2 - x)
-        foreach term, t_q in q
-            Iteration 1: t_q = x, s = (-x^2 + x - 1), p = (x^3 + x - 1), q = (x + 1), r = (x^2 - x), quotientTerm = -x
-                [set product = the product of quotientTerm and t_q] product = -x * x = -x^2
-                [if any term, t_s, in s has the same degree as product] YES, t_s = -x^2
-                [then replace t_s with the difference of t_s and product] t_s - product = 0, so now s = (x - 1)
-                [else insert the difference of 0 and product as a new term in s in correct sorted position]
-            Iteration 2: t_q = 1, s = (x - 1), p = (x^3 + x - 1), q = (x + 1), r = (x^2 - x), quotientTerm = -x
-                [set product = the product of quotientTerm and t_q] product = -x * 1 = -x
-                [if any term, t_s, in s has the same degree as product] YES, t_s = x
-                [then replace t_s with the difference of t_s and product] t_s - product = 2x, so now s = (2x - 1)
-                [else insert the difference of 0 and product as a new term in s in correct sorted position]
-    Iteration 3: s = (2x - 1), p = (x^3 + x - 1), q = (x + 1), r = (x^2 - x)
-        [set quotientTerm = largest term of s / largest term of q] quotientTerm = 2x / x = 2
-        [insert quotientTerm into r] r = (x^2 - x + 2)
-        foreach term, t_q in q
-            Iteration 1: t_q = x, s = (2x - 1), p = (x^3 + x - 1), q = (x + 1), r = (x^2 - x + 2), quotientTerm = 2
-                [set product = the product of quotientTerm and t_q] product = 2 * x = 2x
-                [if any term, t_s, in s has the same degree as product] YES, t_s = 2x
-                [then replace t_s with the difference of t_s and product] t_s - product = 0, so now s = (1)
-                [else insert the difference of 0 and product as a new term in s in correct sorted position]
-            Iteration 2: t_q = 1, s = (1), p = (x^3 + x - 1), q = (x + 1), r = (x^2 - x + 2), quotientTerm = 2
-                [set product = the product of quotientTerm and t_q] product = 2 * 1 = 2
-                [if any term, t_s, in s has the same degree as product] YES, t_s = 1
-                [then replace t_s with the difference of t_s and product] t_s - product = -1, so now s = (-1)
-                [else insert the difference of 0 and product as a new term in s in correct sorted position]
+r = 0
+pCopy = (x^3 + x - 1)
+while pCopy is not empty and max degree of term in pCopy, pCopy_i, is >= max degree of term in q, q_i
+    Iteration 1: pCopy_i = x^3, q_i = x, r = 0, pCopy = (x^3 + x - 1), p = (x^3 + x - 1), q = (x + 1)
+        [set quotientTerm = pCopy_i / q_i] quotientTerm = x^2
+        [insert quotientTerm into r as a new term] r = (x^2)
+        foreach term, t_q, in q
+            Iteration 1: t_q = x, quotientTerm = x^2, pCopy_i = x^3, q_i = x, r = (x^2), pCopy = (x^3 + x - 1), p = (x^3 + x - 1), q = (x + 1)
+                [set productTerm = t_q * quotientTerm] productTerm = x^3
+                [if any term, t_pCopy, in pCopy has the same degree as productTerm] YES, t_pCopy = x^3
+                [then replace t_pCopy in pCopy with the difference of t_pCopy and productTerm] t_pCopy - productTerm = 0, so now pCopy = (x - 1)
+                [else insert the difference of 0 and productTerm in pCopy as a new term]
+            Iteration 2: t_q = 1, quotientTerm = x^2, pCopy_i = x^3, q_i = x, r = (x^2), pCopy = (x - 1), p = (x^3 + x - 1), q = (x + 1)
+                [set productTerm = t_q * quotientTerm] productTerm = x^2
+                [if any term, t_pCopy, in pCopy has the same degree as productTerm] NO
+                [then replace t_pCopy in pCopy with the difference of t_pCopy and productTerm]
+                [else insert the difference of 0 and productTerm in pCopy as a new term] 0 - productTerm = -x^2 so now pCopy = (-x^2 + x - 1)
+    Iteration 2: pCopy_i = -x^2, q_i = x, r = (x^2), pCopy = (-x^2 + x - 1), p = (x^3 + x - 1), q = (x + 1)
+            [set quotientTerm = pCopy_i / q_i] quotientTerm = -x
+            [insert quotientTerm into r as a new term] r = (x^2 - x)
+            foreach term, t_q, in q
+                Iteration 1: t_q = x, quotientTerm = -x, pCopy_i = -x^2, q_i = x, r = (x^2 - x), pCopy = (-x^2 + x - 1), p = (x^3 + x - 1), q = (x + 1)
+                    [set productTerm = t_q * quotientTerm] productTerm = -x^2
+                    [if any term, t_pCopy, in pCopy has the same degree as productTerm] YES, t_pCopy = -x^2
+                    [then replace t_pCopy in pCopy with the difference of t_pCopy and productTerm] t_pCopy - productTerm = 0, so now pCopy = (x - 1)
+                    [else insert the difference of 0 and productTerm in pCopy as a new term]
+                Iteration 2: t_q = 1, quotientTerm = -x, pCopy_i = -x^2, q_i = x, r = (x^2 - x), pCopy = (x - 1), p = (x^3 + x - 1), q = (x + 1)
+                    [set productTerm = t_q * quotientTerm] productTerm = -x
+                    [if any term, t_pCopy, in pCopy has the same degree as productTerm] NO
+                    [then replace t_pCopy in pCopy with the difference of t_pCopy and productTerm]
+                    [else insert the difference of 0 and productTerm in pCopy as a new term] 0 - productTerm = x so now pCopy = (2x - 1)
+    Iteration 3: pCopy_i = 2x, q_i = x, r = (x^2 - x), pCopy = (2x - 1), p = (x^3 + x - 1), q = (x + 1)
+                [set quotientTerm = pCopy_i / q_i] quotientTerm = 2
+                [insert quotientTerm into r as a new term] r = (x^2 - x + 2)
+                foreach term, t_q, in q
+                    Iteration 1: t_q = x, quotientTerm = 2, pCopy_i = 2x, q_i = x, r = (x^2 - x + 2), pCopy = (2x - 1), p = (x^3 + x - 1), q = (x + 1)
+                        [set productTerm = t_q * quotientTerm] productTerm = 2x
+                        [if any term, t_pCopy, in pCopy has the same degree as productTerm] YES, t_pCopy = -2x
+                        [then replace t_pCopy in pCopy with the difference of t_pCopy and productTerm] t_pCopy - productTerm = 0, so now pCopy = (1)
+                        [else insert the difference of 0 and productTerm in pCopy as a new term]
+                    Iteration 2: t_q = 1, quotientTerm = 2, pCopy_i = 2x, q_i = x, r = (x^2 - x + 2), pCopy = (1), p = (x^3 + x - 1), q = (x + 1)
+                        [set productTerm = t_q * quotientTerm] productTerm = 2
+                        [if any term, t_pCopy, in pCopy has the same degree as productTerm] YES, t_pCopy = 1
+                        [then replace t_pCopy in pCopy with the difference of t_pCopy and productTerm] t_pCopy - productTerm = -1, so now pCopy = (-1)
+                        [else insert the difference of 0 and productTerm in pCopy as a new term]
 We are done! r = (x^2 - x + 2)
 
 ## Part 1
