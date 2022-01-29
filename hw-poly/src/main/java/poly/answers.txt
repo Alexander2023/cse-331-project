@@ -128,25 +128,59 @@ doesn't hold until it has been fully established through initialization.
 
 1. Calls to checkRep in RatTerm
 
-
+I included calls to checkRep at the end of constructors since we want to ensure that once
+our object is initialized, our rep invariant holds. I also called checkRep at the beginning
+of methods to ensure our invariant has not been corrupted by another method and at the end
+of methods to ensure we didn't corrupt our invariant in a given implemented method.
 
 2. Weakened Rep Invariant
 
+- RatTerm constructor
+- checkRep method
+- hashCode method
+- isZero method
 
+The RatTerm constructor might be different by not changing the exponent to 0 if the coefficient
+is zero, but rather assigning the argument unchanged to exponent. This would simplify the code
+but increases the variety of acceptable zero terms.
+
+checkRep could remove the assertion for checking if the exponent is zero when the coefficient
+is zero which would simplify the code but would provide less guarantee of the rep state.
+
+hashCode could change the hashing function to handle a special case where the coefficient is
+zero so that all zero terms return the same code. This could improve performance for hashmaps
+and result in expected mappings for zero terms but reduces code clarity.
+
+equals could handle zero terms in a special case which would result in zero terms with different
+exponents to be considered equal but would reduce code clarity.
 
 3. Alternate Rep Invariant
 
+- RatTerm constructor
+- checkRep method
 
+The RatTerm constructor might be different by changing the exponent to zero when the coefficient
+equal NaN. This would ensure consistency between NaN terms but would reduce code clarity.
 
+checkRep could add an assert to check that the exponent is zero when the coefficient equals NaN
+which would provide more guarantees of the rep state if passed but could require more computations.
 
 ## Part 3
 ###########################################################################
 
 1. Calls to checkRep in RatPoly
 
-
+I included calls to checkRep at the end of constructors since we want to ensure that once
+our object is initialized, our rep invariant holds. I also called checkRep at the beginning
+of methods to ensure our invariant has not been corrupted by another method and at the end
+of methods to ensure we didn't corrupt our invariant in a given implemented method.
 
 2. Alternate Representation
 
-
+The advantages to this representation are that we may only need a single type for a method
+implementation and this could increase specificity of our code. The disadvantages are that this is
+more difficult to maintain, requires extra care to avoid introducing bugs, and loses out on the behavior of
+our RatPoly object which will lead to less functionality or more redundancy in our code. I believe using a
+single list of RatTerms is better because the advantages are slim compared to the disadvantages and since it
+has higher cohesion.
 
