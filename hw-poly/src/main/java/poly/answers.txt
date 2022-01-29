@@ -85,19 +85,43 @@ We are done! r = (x^2 - x + 2)
 
 1. Weakened Rep Invariant
 
+- RatNum constructor
+- checkRep method
+- gcd method
+- hashCode method
+- equals
 
+The RatNum constructor with numerator and denominator arguments could be different
+by removing the call to gcd and directly assigning the arguments to their corresponding
+fields. This could improve performance by reducing the amount of calculations, but would
+alter equivalences by making rational numbers that are equivalent but are not in reduced
+form have different hash codes and return false for equals.
+
+checkRep could remove the second assertion making it faster to execute, but would provide
+less guarantees of the rep state.
+
+gcd could be removed completely since it is only being used to find the reduced form
+which would improve the code clarity but reduces the functionality of the object.
+
+hashCode could alter its hashing function by using the reduced form of the numerator and
+denominator which would guarantee the same hash code for non-reduced rational numbers
+equivalent in reduced form but would reduce the performance from increase computation.
+
+equals could compare the numerator and denominator in reduced form which would guarantee
+equality for non-reduced rational numbers equivalent in reduced form but would reduce the
+performance from increased computation.
 
 2. Alternate add, sub, mul, div
 
-We lose the immutability of our class, we don't set to the reduced form as in the constructor,
-and our rep may be broken since it is not getting checked.
-NAN concern?
-
+The changes would fail to meet the method specs since there is no spec field mentioning
+that the method may modify the numerator and denominator and that the effect may be changes
+to the state of this. The changes would fail to meet the specs of the class by losing
+immutability since clients could alter the fields.
 
 3. Constructor checkReps
 
-Sufficient b/c our representation has not been established yet so it can't be broken
-
+It is sufficient to call checkRep only at the end of constructors since our rep invariant
+doesn't hold until it has been fully established through initialization.
 
 ## Part 2
 ###########################################################################
@@ -106,11 +130,23 @@ Sufficient b/c our representation has not been established yet so it can't be br
 
 
 
+2. Weakened Rep Invariant
+
+
+
+3. Alternate Rep Invariant
+
+
+
 
 ## Part 3
 ###########################################################################
 
 1. Calls to checkRep in RatPoly
+
+
+
+2. Alternate Representation
 
 
 
