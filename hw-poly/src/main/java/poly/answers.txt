@@ -138,7 +138,7 @@ of methods to ensure we didn't corrupt our invariant in a given implemented meth
 - RatTerm constructor
 - checkRep method
 - hashCode method
-- isZero method
+- equals method
 
 The RatTerm constructor might be different by not changing the exponent to 0 if the coefficient
 is zero, but rather assigning the argument unchanged to exponent. This would simplify the code
