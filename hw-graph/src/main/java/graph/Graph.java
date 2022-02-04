@@ -170,7 +170,7 @@ public class Graph implements Iterable<String> {
      *
      * Each Edge can be described by src -> dst (L), where src points to dst and L is the label
      */
-    public class Edge {
+    public static class Edge {
         /**
          * @param label the label to apply to the connection from src to dst
          * @param src the src node from which the edge starts
