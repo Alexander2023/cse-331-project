@@ -1,0 +1,11 @@
+# Create the graphs
+CreateGraph graph1
+CreateGraph graph2
+
+# Add a node to each
+AddNode graph1 n1
+AddNode graph2 n2
+
+# Print the children of the graphs
+ListNodes graph1
+ListNodes graph2
