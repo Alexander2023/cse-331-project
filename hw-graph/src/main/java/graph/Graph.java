@@ -11,8 +11,7 @@ import java.util.Iterator;
  * [[n1 -> n1_a (L1_a), n1_b (L1_b), ...], [n1_a], [n1_b], ...] is a graph containing the nodes
  * n1, n1_a, n1_b, ... where n1_a, n1_b, ... are the nodes to which n1 has an edge pointing from
  * itself to each of the nodes, and so on. Graph can also be described constructively, with the
- * append operation, ':' such that [n1]:G is the result of putting the node n1 in the Graph G
- * and L1[n1_a]:n1 is the result of adding an edge from node n1 to node n1_a with label L1.
+ * append operation, ':' such that [n1]:G is the result of putting the node n1 in the Graph G.
  *
  * Nodes in Graph can only have edges between other existing nodes. Labels of edges are not unique,
  * but no more than one edge between a source and destination node pair can have the same label.
