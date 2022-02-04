@@ -1,0 +1,11 @@
+# Create a graph
+CreateGraph graph1
+
+# Add a single node
+AddNode graph1 n1
+
+# Add an edge to self
+AddEdge graph1 n1 n1 e1
+
+# Print the children of single node
+ListChildren graph1 n1

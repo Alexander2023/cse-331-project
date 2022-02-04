@@ -1,0 +1,12 @@
+# Create a graph
+created graph graph1
+
+# Add a single node
+added node n1 to graph1
+
+# Add two edges to self with different labels
+added edge e1 from n1 to n1 in graph1
+added edge e2 from n1 to n1 in graph1
+
+# Print the children of single node
+the children of n1 in graph1 are: n1(e1) n1(e2)

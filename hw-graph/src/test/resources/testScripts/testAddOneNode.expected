@@ -1,0 +1,8 @@
+# Create a graph
+created graph graph1
+
+# Add a single node
+added node n1 to graph1
+
+# Prints the node in the graph
+graph1 contains: n1
