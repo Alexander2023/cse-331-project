@@ -3,7 +3,7 @@ package graph;
 import java.util.Iterator;
 
 /**
- * Graph is a mutable finite set of nodes connected by edges.
+ * Graph is a mutable finite set of nodes connected by directed edges with labels.
  *
  * Each Graph can be described by
  * [[n1 -> n1_a (L1_a), n1_b (L1_b), ...], [n2 -> n2_a (L2_a), n2_b (L2_b), ...], ...],
@@ -30,11 +30,12 @@ public class Graph implements Iterable<String> {
      * Adds node into this
      *
      * @param nodeData the data for the node to add into this
-     * @spec.requires nodeData != null && nodeData is unique (not present in graph)
+     * @return true if and only if nodeData is added successfully to this. Note that null
+     * values and non-unique nodeData (present in graph) will be ignored.
      * @spec.modifies this
      * @spec.effects this_post = [nodeData]:G
      */
-    public void addNode(String nodeData) {
+    public boolean addNode(String nodeData) {
         // TODO: Fill in this method, then remove the RuntimeException
         throw new RuntimeException("Graph.addNode() is not yet implemented");
     }
@@ -45,12 +46,13 @@ public class Graph implements Iterable<String> {
      * @param label the label of the edge
      * @param src the source node from which the edge starts
      * @param dst the destination node to which the edge points
-     * @spec.requires label != null && src != null && dst != null && [src, dst]:G &&
-     * label is unique (not present in existing edge between src and dst)
+     * @return true if and only if the edge src -> dst (label) is added successfully to this.
+     * Note that null values, edges between nonexistent nodes, and non-unique labels (present
+     * in existing edge between src and dst) will be ignored.
      * @spec.modifies this
      * @spec.effects If this = [[src], [dst]], then this_post = [[src -> dst (label)], [dst]]
      */
-    public void addEdge(String label, String src, String dst) {
+    public boolean addEdge(String label, String src, String dst) {
         // TODO: Fill in this method, then remove the RuntimeException
         throw new RuntimeException("Graph.addEdge() is not yet implemented");
     }
@@ -60,7 +62,7 @@ public class Graph implements Iterable<String> {
      *
      * @param parent the parent node whose children are to be received
      * @return all nodes ni such that parent -> ni (Li) where i is arbitrary
-     * @spec.requires parent != null
+     * @throws NullPointerException if parent == null
      */
     public String[] getChildren(String parent) {
         // TODO: Fill in this method, then remove the RuntimeException
@@ -72,7 +74,7 @@ public class Graph implements Iterable<String> {
      *
      * @param child the child node whose parents are to be received
      * @return all nodes ni such that ni -> child (Li) where i is arbitrary
-     * @spec.requires child != null
+     * @throws NullPointerException if child == null
      */
     public String[] getParents(String child) {
         // TODO: Fill in this method, then remove the RuntimeException
@@ -84,7 +86,7 @@ public class Graph implements Iterable<String> {
      *
      * @param label the label of the edge whose connected nodes are to be received
      * @return all nodes ni and nj such that ni -> nj (label) where i,j are arbitrary
-     * @spec.requires label != null
+     * @throws NullPointerException if label == null
      */
     public String[] getNodesByLabel(String label) {
         // TODO: Fill in this method, then remove the RuntimeException
@@ -96,7 +98,7 @@ public class Graph implements Iterable<String> {
      *
      * @param label the label to check if edges possess
      * @return all edges ni -> nj (label) where i,j are arbitrary
-     * @spec.requires label != null
+     * @throws NullPointerException if label == null
      */
     public Edge[] getEdgesByLabel(String label) {
         // TODO: Fill in this method, then remove the RuntimeException
@@ -108,7 +110,7 @@ public class Graph implements Iterable<String> {
      *
      * @param nodeData the node to which to find the edges pointing to
      * @return all edges ni -> nodeData (Li) where i is arbitrary
-     * @spec.requires nodeData != null
+     * @throws NullPointerException if nodeData == null
      */
     public Edge[] getIncomingEdges(String nodeData) {
         // TODO: Fill in this method, then remove the RuntimeException
@@ -120,7 +122,7 @@ public class Graph implements Iterable<String> {
      *
      * @param nodeData the node to which to find the edges pointing from
      * @return all edges nodeData -> ni (Li) where i is arbitrary
-     * @spec.requires nodeData != null
+     * @throws NullPointerException if nodeData == null
      */
     public Edge[] getOutgoingEdges(String nodeData) {
         // TODO: Fill in this method, then remove the RuntimeException
@@ -132,7 +134,7 @@ public class Graph implements Iterable<String> {
      *
      * @param nodeData the data of the node to check if present in this
      * @return true if and only if nodeData is present in this
-     * @spec.requires nodeData != null
+     * @throws NullPointerException if nodeData == null
      */
     public boolean containsNode(String nodeData) {
         // TODO: Fill in this method, then remove the RuntimeException
@@ -146,7 +148,7 @@ public class Graph implements Iterable<String> {
      * @param src the source node to check if edge with label exists from
      * @param dst the destination node to check if edge with label exists to
      * @return true if and only if src -> dst (label) is an edge in this
-     * @spec.requires label != null, src != null, dst != null
+     * @throws NullPointerException if label == null || src == null || dst == null
      */
     public boolean containsEdge(String label, String src, String dst) {
         // TODO: Fill in this method, then remove the RuntimeException
@@ -166,7 +168,7 @@ public class Graph implements Iterable<String> {
 
 
     /**
-     * Edge is an immutable connection between two nodes
+     * Edge is an immutable connection between two nodes with direction and a label
      *
      * Each Edge can be described by src -> dst (L), where src points to dst and L is the label
      */
@@ -175,7 +177,7 @@ public class Graph implements Iterable<String> {
          * @param label the label to apply to the connection from src to dst
          * @param src the src node from which the edge starts
          * @param dst the dst node to which the edge ends
-         * @spec.requires label != null, src != null, dst != null
+         * @throws NullPointerException if label == null || src == null || dst == null
          * @spec.effects Constructs a new Edge, src -> dst (label)
          */
         public Edge(String label, String src, String dst) {
