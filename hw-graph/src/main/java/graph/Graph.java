@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 /**
  * Graph is a mutable finite set of nodes connected by edges.
+ *
  * Each Graph can be described by
  * [[n1 -> n1_a (L1_a), n1_b (L1_b), ...], [n2 -> n2_a (L2_a), n2_b (L2_b), ...], ...],
  * where [] is an empty graph, [[n1]] is a one node graph containing the node n1 with no edges,
@@ -59,8 +60,7 @@ public class Graph implements Iterable<String> {
      * Returns the children of parent
      *
      * @param parent the parent node whose children are to be received
-     * @return if this = [[n1 -> n1_a (L1_a), n1_b (L1_b), ...], [n1_a], [n1_b], ...] where
-     * n1 = parent, then returns [n1_a, n1_b, ...]
+     * @return all nodes ni such that parent -> ni (Li) where i is arbitrary
      * @spec.requires parent != null
      */
     public String[] getChildren(String parent) {
@@ -72,8 +72,7 @@ public class Graph implements Iterable<String> {
      * Returns the parents of child
      *
      * @param child the child node whose parents are to be received
-     * @return if this = [[child], [n1 -> child (L1)], [n2 -> child (L2)], ...],
-     * then returns [n1, n2, ...]
+     * @return all nodes ni such that ni -> child (Li) where i is arbitrary
      * @spec.requires child != null
      */
     public String[] getParents(String child) {
@@ -85,8 +84,7 @@ public class Graph implements Iterable<String> {
      * Returns the nodes connected, both to and from, edge containing label
      *
      * @param label the label of the edge whose connected nodes are to be received
-     * @return if this = [[n1 -> n1_a (L1_a), n1_b (L1_b), ...]] where L1_a = label,
-     * then returns [n1, n1_a]
+     * @return all nodes ni and nj such that ni -> nj (label) where i,j are arbitrary
      * @spec.requires label != null
      */
     public String[] getNodesByLabel(String label) {
@@ -98,9 +96,7 @@ public class Graph implements Iterable<String> {
      * Returns the edges that possess label
      *
      * @param label the label to check if edges possess
-     * @return if this = [[n1 -> n1_a (label), n1_b (label), ...], [n1_a], [n1_b], ...],
-     * then returns [n1 -> n1_a (label), n1 -> n1_b (label), ...]
-     * @return returns all edges such that ni -> nj (label) where i,j are arbitrary +=+
+     * @return all edges ni -> nj (label) where i,j are arbitrary
      * @spec.requires label != null
      */
     public Edge[] getEdgesByLabel(String label) {
@@ -112,8 +108,7 @@ public class Graph implements Iterable<String> {
      * Returns the incoming edges of nodeData
      *
      * @param nodeData the node to which to find the edges pointing to
-     * @return if this = [[n1 -> n1_a (L1_a), n1_b (L1_b), ...]],
-     * then returns
+     * @return all edges ni -> nodeData (Li) where i is arbitrary
      * @spec.requires nodeData != null
      */
     public Edge[] getIncomingEdges(String nodeData) {
@@ -121,6 +116,13 @@ public class Graph implements Iterable<String> {
         throw new RuntimeException("Graph.getIncomingEdges() is not yet implemented");
     }
 
+    /**
+     * Returns the outgoing edges of nodeData
+     *
+     * @param nodeData the node to which to find the edges pointing from
+     * @return all edges nodeData -> ni (Li) where i is arbitrary
+     * @spec.requires nodeData != null
+     */
     public Edge[] getOutgoingEdges(String nodeData) {
         // TODO: Fill in this method, then remove the RuntimeException
         throw new RuntimeException("Graph.getOutgoingEdges() is not yet implemented");
@@ -175,7 +177,7 @@ public class Graph implements Iterable<String> {
          * @param src the src node from which the edge starts
          * @param dst the dst node to which the edge ends
          * @spec.requires label != null, src != null, dst != null
-         * @spec.effects Constructs a new Edge, src -> dst (L)
+         * @spec.effects Constructs a new Edge, src -> dst (label)
          */
         public Edge(String label, String src, String dst) {
             // TODO: Fill in this method, then remove the RuntimeException
