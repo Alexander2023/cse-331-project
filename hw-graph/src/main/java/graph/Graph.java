@@ -6,9 +6,9 @@ import java.util.Iterator;
  * Graph is a mutable finite set of nodes connected by directed edges with labels.
  *
  * Each Graph can be described by
- * [[n1 -> n1_a (L1_a), n1_b (L1_b), ...], [n2 -> n2_a (L2_a), n2_b (L2_b), ...], ...],
+ * [[n1 - n1_a (L1_a), n1_b (L1_b), ...], [n2 - n2_a (L2_a), n2_b (L2_b), ...], ...],
  * where [] is an empty graph, [[n1]] is a one node graph containing the node n1 with no edges,
- * [[n1 -> n1_a (L1_a), n1_b (L1_b), ...], [n1_a], [n1_b], ...] is a graph containing the nodes
+ * [[n1 - n1_a (L1_a), n1_b (L1_b), ...], [n1_a], [n1_b], ...] is a graph containing the nodes
  * n1, n1_a, n1_b, ... where n1_a, n1_b, ... are the nodes to which n1 has an edge pointing from
  * itself to each of the nodes, and so on. Graph can also be described constructively, with the
  * append operation, ':' such that [n1]:G is the result of putting the node n1 in the Graph G.
@@ -46,11 +46,11 @@ public class Graph implements Iterable<String> {
      * @param label the label of the edge
      * @param src the source node from which the edge starts
      * @param dst the destination node to which the edge points
-     * @return true if and only if the edge src -> dst (label) is added successfully to this.
+     * @return true if and only if the edge src - dst (label) is added successfully to this.
      * Note that null values, edges between nonexistent nodes, and non-unique labels (present
      * in existing edge between src and dst) will be ignored.
      * @spec.modifies this
-     * @spec.effects If this = [[src], [dst]], then this_post = [[src -> dst (label)], [dst]]
+     * @spec.effects If this = [[src], [dst]], then this_post = [[src - dst (label)], [dst]]
      */
     public boolean addEdge(String label, String src, String dst) {
         // TODO: Fill in this method, then remove the RuntimeException
@@ -61,7 +61,7 @@ public class Graph implements Iterable<String> {
      * Returns the children of parent
      *
      * @param parent the parent node whose children are to be received
-     * @return all nodes ni such that parent -> ni (Li) where i is arbitrary
+     * @return all nodes ni such that parent - ni (Li) where i is arbitrary
      * @throws NullPointerException if parent == null
      */
     public String[] getChildren(String parent) {
@@ -73,7 +73,7 @@ public class Graph implements Iterable<String> {
      * Returns the parents of child
      *
      * @param child the child node whose parents are to be received
-     * @return all nodes ni such that ni -> child (Li) where i is arbitrary
+     * @return all nodes ni such that ni - child (Li) where i is arbitrary
      * @throws NullPointerException if child == null
      */
     public String[] getParents(String child) {
@@ -85,7 +85,7 @@ public class Graph implements Iterable<String> {
      * Returns the nodes connected, both to and from, edge containing label
      *
      * @param label the label of the edge whose connected nodes are to be received
-     * @return all nodes ni and nj such that ni -> nj (label) where i,j are arbitrary
+     * @return all nodes ni and nj such that ni - nj (label) where i,j are arbitrary
      * @throws NullPointerException if label == null
      */
     public String[] getNodesByLabel(String label) {
@@ -97,7 +97,7 @@ public class Graph implements Iterable<String> {
      * Returns the edges that possess label
      *
      * @param label the label to check if edges possess
-     * @return all edges ni -> nj (label) where i,j are arbitrary
+     * @return all edges ni - nj (label) where i,j are arbitrary
      * @throws NullPointerException if label == null
      */
     public Edge[] getEdgesByLabel(String label) {
@@ -109,7 +109,7 @@ public class Graph implements Iterable<String> {
      * Returns the incoming edges of nodeData
      *
      * @param nodeData the node to which to find the edges pointing to
-     * @return all edges ni -> nodeData (Li) where i is arbitrary
+     * @return all edges ni - nodeData (Li) where i is arbitrary
      * @throws NullPointerException if nodeData == null
      */
     public Edge[] getIncomingEdges(String nodeData) {
@@ -121,7 +121,7 @@ public class Graph implements Iterable<String> {
      * Returns the outgoing edges of nodeData
      *
      * @param nodeData the node to which to find the edges pointing from
-     * @return all edges nodeData -> ni (Li) where i is arbitrary
+     * @return all edges nodeData - ni (Li) where i is arbitrary
      * @throws NullPointerException if nodeData == null
      */
     public Edge[] getOutgoingEdges(String nodeData) {
@@ -147,7 +147,7 @@ public class Graph implements Iterable<String> {
      * @param label the label of the edge to check if present from src node to dst node
      * @param src the source node to check if edge with label exists from
      * @param dst the destination node to check if edge with label exists to
-     * @return true if and only if src -> dst (label) is an edge in this
+     * @return true if and only if src - dst (label) is an edge in this
      * @throws NullPointerException if label == null || src == null || dst == null
      */
     public boolean containsEdge(String label, String src, String dst) {
@@ -170,7 +170,7 @@ public class Graph implements Iterable<String> {
     /**
      * Edge is an immutable connection between two nodes with direction and a label
      *
-     * Each Edge can be described by src -> dst (L), where src points to dst and L is the label
+     * Each Edge can be described by src - dst (L), where src points to dst and L is the label
      */
     public static class Edge {
         /**
@@ -178,7 +178,7 @@ public class Graph implements Iterable<String> {
          * @param src the src node from which the edge starts
          * @param dst the dst node to which the edge ends
          * @throws NullPointerException if label == null || src == null || dst == null
-         * @spec.effects Constructs a new Edge, src -> dst (label)
+         * @spec.effects Constructs a new Edge, src - dst (label)
          */
         public Edge(String label, String src, String dst) {
             // TODO: Fill in this method, then remove the RuntimeException
@@ -188,7 +188,7 @@ public class Graph implements Iterable<String> {
         /**
          * Returns the label of this
          *
-         * @return if this = src -> dst (L), then returns L
+         * @return if this = src - dst (L), then returns L
          */
         public String getLabel() {
             // TODO: Fill in this method, then remove the RuntimeException
@@ -198,7 +198,7 @@ public class Graph implements Iterable<String> {
         /**
          * Returns the src node of this
          *
-         * @return if this = src -> dst (L), then returns src
+         * @return if this = src - dst (L), then returns src
          */
         public String getSrc() {
             // TODO: Fill in this method, then remove the RuntimeException
@@ -208,7 +208,7 @@ public class Graph implements Iterable<String> {
         /**
          * Returns the dst node of this
          *
-         * @return if this = src -> dst (L), then returns dst
+         * @return if this = src - dst (L), then returns dst
          */
         public String getDst() {
             // TODO: Fill in this method, then remove the RuntimeException

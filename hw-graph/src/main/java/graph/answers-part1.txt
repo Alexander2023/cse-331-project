@@ -9,56 +9,55 @@ a. Write an AF and RI for IntQueue1 and IntQueue2.
 
     Abstraction Function:
 
-
-
     Representation Invariant:
 
-
-
+    No null elements
 
     ### IntQueue2
 
     Abstraction Function:
 
-
-
     Representation Invariant:
 
-
-
+    0 <= front < entries.length
+    0 <= size < entries.length
 
 b. Group the snapshots of IntQueue2's internal state into groups that have the same abstract state.
 
-
-
+   Group 1 - a, d, g
+   Group 2 - b, h
+   Group 3 - c, f
+   Group 4 - e
 
 c. For each signature below, state and justify in 1-2 sentences (per part) whether the method or constructor
 could possibly expose the representation, given the information available. Explain any assumptions you made.
 
     1. `public int solveEquations(int x, int y, int z)`
 
-
+        No rep exposure since arguments and return value are primitive types.
 
     2. `public String[] decode(boolean slowly)`
 
-
+        Could expose the rep through the return value if the array is an internal field and
+        the array is not a defensive copy.
 
     3. `private Date myBirthday()`
 
-
+        Could expose the rep through the return value which is an object of type Date if
+        Date is an internal field and passes back a reference.
 
     4. `public String toString()`
 
-
+        No rep exposure since return value is immutable.
 
     5. `public Iterator<Integer> elements()`
 
-
+        No rep exposure since Iterator is over Integers and Integer is immutable.
 
     6. `public Deck(List<Card> cards)`
 
-
-
+        Could expose rep by assigning an internal field to the argument cards.
+        This would allow the client to have reference to internal state.
 
 ## Part 2
 ###########################################################################
@@ -68,7 +67,16 @@ interface to a graph. If your design includes multiple classes or interfaces, ex
 included each one; if not, explain whether you considered additional classes and why you decided
 not to include them.
 
+I included the mutators - addNode and addEdge - because I felt that they provided the functionality
+for creating complex graphs such as islands, cycles, and nodes with any number of parents and children.
 
+I included the observers - getChildren, getParents, getNodesByLabel, getEdgesByLabel, getIncomingEdges,
+getOutgoingEdges, containsNode, containsEdge, iterator - because they allow the client to access info
+about all the primary relationships between nodes and edges.
+
+I included a nested inner class object because I wanted to group the data about labels and the
+corresponding connected nodes into a cohesive type to make it more convenient for the client
+to view this core property of the graph.
 
 
 ## Part 3
@@ -77,5 +85,8 @@ not to include them.
 What was your testing strategy for this assignment? How do your script tests and JUnit tests
 differ from each other (if they do), and why?
 
-
+My testing strategy followed after the "0, 1, 2" approach where I tested whether these
+combinations of nodes and edges would affect the graph. My script tests focus on the basic construction
+of unique cases of nodes and edges, whereas, my junit tests focused on verifying exceptions and method
+specific behavior.
 
