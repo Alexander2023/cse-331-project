@@ -49,6 +49,18 @@ public class GraphTest {
         assertFalse(g.addEdge("e1", "n1", "n2"));
     }
 
+    @Test (expected = NullPointerException.class)
+    public void testGetChildrenWithNullParent() {
+        Graph g = new Graph();
+        g.getChildren(null);
+    }
+
+    @Test (expected = NullPointerException.class)
+    public void testGetParentsWithNullChild() {
+        Graph g = new Graph();
+        g.getParents(null);
+    }
+
     @Test
     public void testGetParentsOneParent() {
         Graph g = new Graph();
@@ -77,6 +89,12 @@ public class GraphTest {
         assertEquals(2, parents.length);
         assertEquals("n1", parents[0]);
         assertEquals("n2", parents[1]);
+    }
+
+    @Test (expected = NullPointerException.class)
+    public void testGetNodesByLabelWithNullLabel() {
+        Graph g = new Graph();
+        g.getNodesByLabel(null);
     }
 
     @Test
@@ -125,6 +143,12 @@ public class GraphTest {
         assertEquals("n4", nodesByLabel[3]);
     }
 
+    @Test (expected = NullPointerException.class)
+    public void testGetEdgesByLabelWithNullLabel() {
+        Graph g = new Graph();
+        g.getEdgesByLabel(null);
+    }
+
     @Test
     public void testGetEdgesByLabelOneEdge() {
         Graph g = new Graph();
@@ -154,6 +178,12 @@ public class GraphTest {
         assertEquals(2, edgesByLabel.length);
         assertEquals(new Graph.Edge("e1", "n1", "n2"), edgesByLabel[0]);
         assertEquals(new Graph.Edge("e1", "n3", "n4"), edgesByLabel[1]);
+    }
+
+    @Test (expected = NullPointerException.class)
+    public void testGetIncomingEdgesWithNullNode() {
+        Graph g = new Graph();
+        g.getIncomingEdges(null);
     }
 
     @Test
@@ -186,6 +216,12 @@ public class GraphTest {
         assertEquals(new Graph.Edge("e2", "n2", "n3"), incomingEdges[1]);
     }
 
+    @Test (expected = NullPointerException.class)
+    public void testGetOutgoingEdgesWithNullNode() {
+        Graph g = new Graph();
+        g.getOutgoingEdges(null);
+    }
+
     @Test
     public void testGetOutgoingEdgesWithOneEdge() {
         Graph g = new Graph();
@@ -216,6 +252,12 @@ public class GraphTest {
         assertEquals(new Graph.Edge("e2", "n1", "n3"), outgoingEdges[1]);
     }
 
+    @Test (expected = NullPointerException.class)
+    public void testContainsNodeWithNullNode() {
+        Graph g = new Graph();
+        g.containsNode(null);
+    }
+
     @Test
     public void testContainsNodeWithExistingNode() {
         Graph g = new Graph();
@@ -230,6 +272,12 @@ public class GraphTest {
         g.addNode("n1");
 
         assertFalse(g.containsNode("n2"));
+    }
+
+    @Test (expected = NullPointerException.class)
+    public void testContainsEdgeWithNullEdge() {
+        Graph g = new Graph();
+        g.containsEdge(null, null, null);
     }
 
     @Test
@@ -250,6 +298,11 @@ public class GraphTest {
         g.addEdge("e1", "n1", "n2");
 
         assertFalse(g.containsEdge("e2", "n1", "n2"));
+    }
+
+    @Test (expected = NullPointerException.class)
+    public void testEdgeConstructorWithNull() {
+        new Graph.Edge(null, null, null);
     }
 
     @Test

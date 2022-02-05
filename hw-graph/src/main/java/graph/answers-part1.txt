@@ -87,6 +87,6 @@ differ from each other (if they do), and why?
 
 My testing strategy followed after the "0, 1, 2" approach where I tested whether these
 combinations of nodes and edges would affect the graph. My script tests focus on the basic construction
-of unique cases of nodes and edges, whereas, my junit tests focused on method
+of unique cases of nodes and edges, whereas, my junit tests focused on verifying exceptions and method
 specific behavior.
 
