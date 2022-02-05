@@ -50,20 +50,6 @@ public class GraphTest {
     }
 
     @Test
-    public void testGetChildrenWithNullParent() {
-        Graph g = new Graph();
-
-        assertThrows(NullPointerException.class, () -> g.getChildren(null));
-    }
-
-    @Test
-    public void testGetParentsWithNullChild() {
-        Graph g = new Graph();
-
-        assertThrows(NullPointerException.class, () -> g.getParents(null));
-    }
-
-    @Test
     public void testGetParentsOneParent() {
         Graph g = new Graph();
         g.addNode("n1");
@@ -91,13 +77,6 @@ public class GraphTest {
         assertEquals(2, parents.length);
         assertEquals("n1", parents[0]);
         assertEquals("n2", parents[1]);
-    }
-
-    @Test
-    public void testGetNodesByLabelWithNullLabel() {
-        Graph g = new Graph();
-
-        assertThrows(NullPointerException.class, () -> g.getNodesByLabel(null));
     }
 
     @Test
@@ -147,13 +126,6 @@ public class GraphTest {
     }
 
     @Test
-    public void testGetEdgesByLabelWithNullLabel() {
-        Graph g = new Graph();
-
-        assertThrows(NullPointerException.class, () -> g.getEdgesByLabel(null));
-    }
-
-    @Test
     public void testGetEdgesByLabelOneEdge() {
         Graph g = new Graph();
         g.addNode("n1");
@@ -182,13 +154,6 @@ public class GraphTest {
         assertEquals(2, edgesByLabel.length);
         assertEquals(new Graph.Edge("e1", "n1", "n2"), edgesByLabel[0]);
         assertEquals(new Graph.Edge("e1", "n3", "n4"), edgesByLabel[1]);
-    }
-
-    @Test
-    public void testGetIncomingEdgesWithNullNode() {
-        Graph g = new Graph();
-
-        assertThrows(NullPointerException.class, () -> g.getIncomingEdges(null));
     }
 
     @Test
@@ -222,13 +187,6 @@ public class GraphTest {
     }
 
     @Test
-    public void testGetOutgoingEdgesWithNullNode() {
-        Graph g = new Graph();
-
-        assertThrows(NullPointerException.class, () -> g.getOutgoingEdges(null));
-    }
-
-    @Test
     public void testGetOutgoingEdgesWithOneEdge() {
         Graph g = new Graph();
         g.addNode("n1");
@@ -259,13 +217,6 @@ public class GraphTest {
     }
 
     @Test
-    public void testContainsNodeWithNullNode() {
-        Graph g = new Graph();
-
-        assertThrows(NullPointerException.class, () -> g.containsNode(null));
-    }
-
-    @Test
     public void testContainsNodeWithExistingNode() {
         Graph g = new Graph();
         g.addNode("n1");
@@ -279,13 +230,6 @@ public class GraphTest {
         g.addNode("n1");
 
         assertFalse(g.containsNode("n2"));
-    }
-
-    @Test
-    public void testContainsEdgeWithNullEdge() {
-        Graph g = new Graph();
-
-        assertThrows(NullPointerException.class, () -> g.containsEdge(null, null, null));
     }
 
     @Test
@@ -306,11 +250,6 @@ public class GraphTest {
         g.addEdge("e1", "n1", "n2");
 
         assertFalse(g.containsEdge("e2", "n1", "n2"));
-    }
-
-    @Test
-    public void testEdgeConstructorWithNull() {
-        assertThrows(NullPointerException.class, () -> new Graph.Edge(null, null, null));
     }
 
     @Test
