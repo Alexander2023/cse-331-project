@@ -1,8 +1,6 @@
 package graph;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * Graph is a mutable finite set of nodes connected by directed edges with labels.
@@ -116,19 +114,17 @@ public class Graph implements Iterable<String> {
      * @return all nodes ni such that parent - ni (Li) where i is arbitrary
      * @throws NullPointerException if parent == null
      */
-    public String[] getChildren(String parent) {
+    public List<String> getChildren(String parent) {
         checkRep(); // Should check reps be executed before exceptions?
 
         if (parent == null) {
             throw new NullPointerException();
         }
 
-        String[] children = new String[graph.get(parent).size()];
+        List<String> children = new ArrayList<>();
 
-        int i = 0;
         for (Edge edge : graph.get(parent)) {
-            children[i] = edge.getDst();
-            i++;
+            children.add(edge.getDst());
         }
 
         checkRep();
@@ -143,7 +139,7 @@ public class Graph implements Iterable<String> {
      * @return all nodes ni such that ni - child (Li) where i is arbitrary
      * @throws NullPointerException if child == null
      */
-    public String[] getParents(String child) {
+    public List<String> getParents(String child) {
         // TODO: Fill in this method, then remove the RuntimeException
         throw new RuntimeException("Graph.getParents() is not yet implemented");
     }
@@ -155,7 +151,7 @@ public class Graph implements Iterable<String> {
      * @return all nodes ni and nj such that ni - nj (label) where i,j are arbitrary
      * @throws NullPointerException if label == null
      */
-    public String[] getNodesByLabel(String label) {
+    public List<String> getNodesByLabel(String label) {
         // TODO: Fill in this method, then remove the RuntimeException
         throw new RuntimeException("Graph.getNodesByLabel() is not yet implemented");
     }
@@ -167,7 +163,7 @@ public class Graph implements Iterable<String> {
      * @return all edges ni - nj (label) where i,j are arbitrary
      * @throws NullPointerException if label == null
      */
-    public Edge[] getEdgesByLabel(String label) {
+    public List<Edge> getEdgesByLabel(String label) {
         // TODO: Fill in this method, then remove the RuntimeException
         throw new RuntimeException("Graph.getEdgesByLabel() is not yet implemented");
     }
@@ -179,7 +175,7 @@ public class Graph implements Iterable<String> {
      * @return all edges ni - nodeData (Li) where i is arbitrary
      * @throws NullPointerException if nodeData == null
      */
-    public Edge[] getIncomingEdges(String nodeData) {
+    public List<Edge> getIncomingEdges(String nodeData) {
         // TODO: Fill in this method, then remove the RuntimeException
         throw new RuntimeException("Graph.getIncomingEdges() is not yet implemented");
     }
@@ -191,7 +187,7 @@ public class Graph implements Iterable<String> {
      * @return all edges nodeData - ni (Li) where i is arbitrary
      * @throws NullPointerException if nodeData == null
      */
-    public Edge[] getOutgoingEdges(String nodeData) {
+    public List<Edge> getOutgoingEdges(String nodeData) {
         // TODO: Fill in this method, then remove the RuntimeException
         throw new RuntimeException("Graph.getOutgoingEdges() is not yet implemented");
     }

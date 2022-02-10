@@ -3,7 +3,10 @@ package graph.junitTests;
 import graph.Graph;
 import org.junit.Test;
 
+import javax.swing.undo.StateEdit;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -68,10 +71,10 @@ public class GraphTest {
         g.addNode("n2");
         g.addEdge("e1", "n1", "n2");
 
-        String[] parents = g.getParents("n2");
+        List<String> parents = g.getParents("n2");
 
-        assertEquals(1, parents.length);
-        assertEquals("n1", parents[0]);
+        assertEquals(1, parents.size());
+        assertEquals("n1", parents.get(0));
     }
 
     @Test
@@ -83,12 +86,12 @@ public class GraphTest {
         g.addEdge("e1", "n1", "n3");
         g.addEdge("e2", "n2", "n3");
 
-        String[] parents = g.getParents("n3");
-        Arrays.sort(parents);
+        List<String> parents = g.getParents("n3");
+        Collections.sort(parents);
 
-        assertEquals(2, parents.length);
-        assertEquals("n1", parents[0]);
-        assertEquals("n2", parents[1]);
+        assertEquals(2, parents.size());
+        assertEquals("n1", parents.get(0));
+        assertEquals("n2", parents.get(1));
     }
 
     @Test (expected = NullPointerException.class)
@@ -103,9 +106,9 @@ public class GraphTest {
         g.addNode("n1");
         g.addNode("n2");
 
-        String[] nodesByLabel = g.getNodesByLabel("e1");
+        List<String> nodesByLabel = g.getNodesByLabel("e1");
 
-        assertEquals(0, nodesByLabel.length);
+        assertEquals(0, nodesByLabel.size());
     }
 
     @Test
@@ -115,12 +118,12 @@ public class GraphTest {
         g.addNode("n2");
         g.addEdge("e1", "n1", "n2");
 
-        String[] nodesByLabel = g.getNodesByLabel("e1");
-        Arrays.sort(nodesByLabel);
+        List<String> nodesByLabel = g.getNodesByLabel("e1");
+        Collections.sort(nodesByLabel);
 
-        assertEquals(2, nodesByLabel.length);
-        assertEquals("n1", nodesByLabel[0]);
-        assertEquals("n2", nodesByLabel[1]);
+        assertEquals(2, nodesByLabel.size());
+        assertEquals("n1", nodesByLabel.get(0));
+        assertEquals("n2", nodesByLabel.get(1));
     }
 
     @Test
@@ -133,14 +136,14 @@ public class GraphTest {
         g.addEdge("e1", "n1", "n2");
         g.addEdge("e1", "n3", "n4");
 
-        String[] nodesByLabel = g.getNodesByLabel("e1");
-        Arrays.sort(nodesByLabel);
+        List<String> nodesByLabel = g.getNodesByLabel("e1");
+        Collections.sort(nodesByLabel);
 
-        assertEquals(4, nodesByLabel.length);
-        assertEquals("n1", nodesByLabel[0]);
-        assertEquals("n2", nodesByLabel[1]);
-        assertEquals("n3", nodesByLabel[2]);
-        assertEquals("n4", nodesByLabel[3]);
+        assertEquals(4, nodesByLabel.size());
+        assertEquals("n1", nodesByLabel.get(0));
+        assertEquals("n2", nodesByLabel.get(1));
+        assertEquals("n3", nodesByLabel.get(2));
+        assertEquals("n4", nodesByLabel.get(3));
     }
 
     @Test (expected = NullPointerException.class)
@@ -156,14 +159,14 @@ public class GraphTest {
         g.addNode("n2");
         g.addEdge("e1", "n1", "n2");
 
-        Graph.Edge[] edgesByLabel = g.getEdgesByLabel("e1");
+        List<Graph.Edge> edgesByLabel = g.getEdgesByLabel("e1");
 
-        assertEquals(1, edgesByLabel.length);
-        assertEquals(new Graph.Edge("e1", "n1", "n2"), edgesByLabel[0]);
+        assertEquals(1, edgesByLabel.size());
+        assertEquals(new Graph.Edge("e1", "n1", "n2"), edgesByLabel.get(0));
     }
 
     @Test
-    public void testGetEdgesByLabelTwoEdgesDiffPairs() {
+    public void testGetEdgesByLabelTwoEdgesDiffPairs() { // Check if lack of sorting causes bug
         Graph g = new Graph();
         g.addNode("n1");
         g.addNode("n2");
@@ -172,12 +175,12 @@ public class GraphTest {
         g.addEdge("e1", "n1", "n2");
         g.addEdge("e1", "n3", "n4");
 
-        Graph.Edge[] edgesByLabel = g.getEdgesByLabel("e1");
-        Arrays.sort(edgesByLabel);
+        List<Graph.Edge> edgesByLabel = g.getEdgesByLabel("e1");
 
-        assertEquals(2, edgesByLabel.length);
-        assertEquals(new Graph.Edge("e1", "n1", "n2"), edgesByLabel[0]);
-        assertEquals(new Graph.Edge("e1", "n3", "n4"), edgesByLabel[1]);
+        assertEquals(2, edgesByLabel.size());
+
+        assertEquals(new Graph.Edge("e1", "n1", "n2"), edgesByLabel.get(0));
+        assertEquals(new Graph.Edge("e1", "n3", "n4"), edgesByLabel.get(1));
     }
 
     @Test (expected = NullPointerException.class)
@@ -193,10 +196,10 @@ public class GraphTest {
         g.addNode("n2");
         g.addEdge("e1", "n1", "n2");
 
-        Graph.Edge[] incomingEdges = g.getIncomingEdges("n2");
+        List<Graph.Edge> incomingEdges = g.getIncomingEdges("n2");
 
-        assertEquals(1, incomingEdges.length);
-        assertEquals(new Graph.Edge("e1", "n1", "n2"), incomingEdges[0]);
+        assertEquals(1, incomingEdges.size());
+        assertEquals(new Graph.Edge("e1", "n1", "n2"), incomingEdges.get(0));
     }
 
     @Test
@@ -208,12 +211,20 @@ public class GraphTest {
         g.addEdge("e1", "n1", "n3");
         g.addEdge("e2", "n2", "n3");
 
-        Graph.Edge[] incomingEdges = g.getIncomingEdges("n3");
-        Arrays.sort(incomingEdges);
+        List<Graph.Edge> incomingEdges = g.getIncomingEdges("n3");
 
-        assertEquals(2, incomingEdges.length);
-        assertEquals(new Graph.Edge("e1", "n1", "n3"), incomingEdges[0]);
-        assertEquals(new Graph.Edge("e2", "n2", "n3"), incomingEdges[1]);
+        assertEquals(2, incomingEdges.size());
+
+        Graph.Edge e1 = new Graph.Edge("e1", "n1", "n3");
+        Graph.Edge e2 = new Graph.Edge("e2", "n2", "n3");
+
+        if (incomingEdges.get(0).getSrc().equals("n1")) {
+            assertEquals(e1, incomingEdges.get(0));
+            assertEquals(e2, incomingEdges.get(1));
+        } else {
+            assertEquals(e1, incomingEdges.get(1));
+            assertEquals(e2, incomingEdges.get(0));
+        }
     }
 
     @Test (expected = NullPointerException.class)
@@ -229,10 +240,10 @@ public class GraphTest {
         g.addNode("n2");
         g.addEdge("e1", "n1", "n2");
 
-        Graph.Edge[] outgoingEdges = g.getOutgoingEdges("n1");
+        List<Graph.Edge> outgoingEdges = g.getOutgoingEdges("n1");
 
-        assertEquals(1, outgoingEdges.length);
-        assertEquals(new Graph.Edge("e1", "n1", "n2"), outgoingEdges[0]);
+        assertEquals(1, outgoingEdges.size());
+        assertEquals(new Graph.Edge("e1", "n1", "n2"), outgoingEdges.get(0));
     }
 
     @Test
@@ -244,12 +255,20 @@ public class GraphTest {
         g.addEdge("e1", "n1", "n2");
         g.addEdge("e2", "n1", "n3");
 
-        Graph.Edge[] outgoingEdges = g.getOutgoingEdges("n1");
-        Arrays.sort(outgoingEdges);
+        List<Graph.Edge> outgoingEdges = g.getOutgoingEdges("n1");
 
-        assertEquals(2, outgoingEdges.length);
-        assertEquals(new Graph.Edge("e1", "n1", "n2"), outgoingEdges[0]);
-        assertEquals(new Graph.Edge("e2", "n1", "n3"), outgoingEdges[1]);
+        Graph.Edge e1 = new Graph.Edge("e1", "n1", "n2");
+        Graph.Edge e2 = new Graph.Edge("e2", "n1", "n3");
+
+        assertEquals(2, outgoingEdges.size());
+
+        if (outgoingEdges.get(0).getDst().equals("n2")) {
+            assertEquals(e1, outgoingEdges.get(0));
+            assertEquals(e2, outgoingEdges.get(1));
+        } else {
+            assertEquals(e1, outgoingEdges.get(1));
+            assertEquals(e2, outgoingEdges.get(0));
+        }
     }
 
     @Test (expected = NullPointerException.class)
