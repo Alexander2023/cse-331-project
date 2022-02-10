@@ -1,6 +1,8 @@
 package graph;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * Graph is a mutable finite set of nodes connected by directed edges with labels.
@@ -18,12 +20,30 @@ import java.util.Iterator;
  * All nodes in Graph are unique.
  */
 public class Graph implements Iterable<String> {
+    private HashMap<String, LinkedList<Edge>> graph; // Does this count as generics
+
+    // Abstraction Function:
+    // AF(this) =
+    //
+    // Rep Invariant:
+    // graph != null &&
+    // for all i such that (0 <= i < graph.size()), graph.get(i) != null &&
+    // graph doesn't contain duplicate nodes
+
+    private void checkRep() {
+        assert graph != null;
+
+        for (String node : graph.keySet()) {
+            assert node != null;
+        }
+    }
+
     /**
      * @spec.effects Constructs a new Graph, []
      */
     public Graph() {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("Graph.constructor is not yet implemented");
+        graph = new HashMap<>();
+        checkRep();
     }
 
     /**
@@ -36,8 +56,17 @@ public class Graph implements Iterable<String> {
      * @spec.effects this_post = [nodeData]:G
      */
     public boolean addNode(String nodeData) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("Graph.addNode() is not yet implemented");
+        checkRep();
+
+        if (nodeData == null || graph.containsKey(nodeData)) {
+            return false;
+        }
+
+        graph.put(nodeData, new LinkedList());
+
+        checkRep();
+
+        return true;
     }
 
     /**
@@ -53,8 +82,31 @@ public class Graph implements Iterable<String> {
      * @spec.effects If this = [[src], [dst]], then this_post = [[src - dst (label)], [dst]]
      */
     public boolean addEdge(String label, String src, String dst) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("Graph.addEdge() is not yet implemented");
+        checkRep();
+
+        if (label == null || src == null || dst == null ||
+            !graph.containsKey(src) || !graph.containsKey(dst) ||
+            !isUniqueLabel(label, src, dst)) {
+            return false;
+        }
+
+        graph.get(src).add(new Edge(label, src, dst));
+
+        checkRep();
+
+        return true;
+    }
+
+    private boolean isUniqueLabel(String label, String src, String dst) {
+        LinkedList<Edge> edges = graph.get(src);
+
+        for (Edge edge : edges) {
+            if (edge.getDst().equals(dst) && edge.getLabel().equals(label)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -65,8 +117,23 @@ public class Graph implements Iterable<String> {
      * @throws NullPointerException if parent == null
      */
     public String[] getChildren(String parent) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("Graph.getChildren() is not yet implemented");
+        checkRep(); // Should check reps be executed before exceptions?
+
+        if (parent == null) {
+            throw new NullPointerException();
+        }
+
+        String[] children = new String[graph.get(parent).size()];
+
+        int i = 0;
+        for (Edge edge : graph.get(parent)) {
+            children[i] = edge.getDst();
+            i++;
+        }
+
+        checkRep();
+
+        return children;
     }
 
     /**
