@@ -18,7 +18,7 @@ import java.util.*;
  * All nodes in Graph are unique.
  */
 public class Graph implements Iterable<String> {
-    private HashMap<String, LinkedList<Edge>> graph;
+    private Map<String, Set<Edge>> graph;
 
     // Abstraction Function:
     // AF(this) =
@@ -58,10 +58,11 @@ public class Graph implements Iterable<String> {
         checkRep();
 
         if (nodeData == null || graph.containsKey(nodeData)) {
+            checkRep();
             return false;
         }
 
-        graph.put(nodeData, new LinkedList<>());
+        graph.put(nodeData, new HashSet<>());
 
         checkRep();
 
@@ -86,6 +87,7 @@ public class Graph implements Iterable<String> {
         if (label == null || src == null || dst == null ||
             !graph.containsKey(src) || !graph.containsKey(dst) ||
             !isUniqueLabel(label, src, dst)) {
+            checkRep();
             return false;
         }
 
@@ -97,7 +99,7 @@ public class Graph implements Iterable<String> {
     }
 
     private boolean isUniqueLabel(String label, String src, String dst) {
-        LinkedList<Edge> edges = graph.get(src);
+        Set<Edge> edges = graph.get(src);
 
         for (Edge edge : edges) {
             if (edge.getDst().equals(dst) && edge.getLabel().equals(label)) {
@@ -116,13 +118,13 @@ public class Graph implements Iterable<String> {
      * @throws NullPointerException if parent == null
      */
     public List<String> getChildren(String parent) {
-        checkRep(); // Should check reps be executed before exceptions?
+        checkRep();
 
         if (parent == null) {
             throw new NullPointerException();
         }
 
-        List<String> children = new ArrayList<>(); // Would we consider this rep exposure?
+        List<String> children = new ArrayList<>();
 
         for (Edge edge : graph.get(parent)) {
             children.add(edge.getDst());
@@ -170,7 +172,7 @@ public class Graph implements Iterable<String> {
      * @throws NullPointerException if label == null
      */
     public List<String> getNodesByLabel(String label) { // Adds duplicates
-        checkRep();
+        checkRep(); // design decision
 
         if (label == null) {
             throw new NullPointerException();
@@ -339,7 +341,9 @@ public class Graph implements Iterable<String> {
     public Iterator<String> iterator() {
         checkRep();
 
-        Iterator<String> nodeIterator = graph.keySet().iterator();
+        Set<String> copy = Collections.unmodifiableSet(graph.keySet());
+
+        Iterator<String> nodeIterator = copy.iterator();
 
         checkRep();
 
@@ -361,8 +365,8 @@ public class Graph implements Iterable<String> {
         // Rep Invariant:
         // label != null && src != null && dst != null
 
-        private void checkRep() { // Should we add javadoc to private methods or normal comments?
-            assert label != null; // Intellij says this is always true
+        private void checkRep() { // Should we add javadoc to private methods or normal comments? javadoc
+            assert label != null;
             assert src != null;
             assert dst != null;
         }
