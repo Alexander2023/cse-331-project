@@ -18,7 +18,7 @@ import java.util.*;
  * All nodes in Graph are unique.
  */
 public class Graph implements Iterable<String> {
-    private HashMap<String, LinkedList<Edge>> graph; // Does this count as generics
+    private HashMap<String, LinkedList<Edge>> graph;
 
     // Abstraction Function:
     // AF(this) =
@@ -26,7 +26,8 @@ public class Graph implements Iterable<String> {
     // Rep Invariant:
     // graph != null &&
     // for all i such that (0 <= i < graph.size()), graph.get(i) != null &&
-    // graph doesn't contain duplicate nodes
+    // graph doesn't contain duplicate nodes &&
+    // no edge with same src and dst nodes has duplicate labels
 
     private void checkRep() {
         assert graph != null;
@@ -60,7 +61,7 @@ public class Graph implements Iterable<String> {
             return false;
         }
 
-        graph.put(nodeData, new LinkedList());
+        graph.put(nodeData, new LinkedList<>());
 
         checkRep();
 
@@ -121,7 +122,7 @@ public class Graph implements Iterable<String> {
             throw new NullPointerException();
         }
 
-        List<String> children = new ArrayList<>();
+        List<String> children = new ArrayList<>(); // Would we consider this rep exposure?
 
         for (Edge edge : graph.get(parent)) {
             children.add(edge.getDst());
@@ -140,8 +141,25 @@ public class Graph implements Iterable<String> {
      * @throws NullPointerException if child == null
      */
     public List<String> getParents(String child) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("Graph.getParents() is not yet implemented");
+        checkRep();
+
+        if (child == null) {
+            throw new NullPointerException();
+        }
+
+        List<String> children = new ArrayList<>();
+
+        for (String node : graph.keySet()) { // Would loops over collections count as nontrivial and require inv?
+            for (Edge edge : graph.get(node)) {
+                if (edge.getDst().equals(child)) {
+                    children.add(edge.getSrc());
+                }
+            }
+        }
+
+        checkRep();
+
+        return children;
     }
 
     /**
@@ -151,9 +169,27 @@ public class Graph implements Iterable<String> {
      * @return all nodes ni and nj such that ni - nj (label) where i,j are arbitrary
      * @throws NullPointerException if label == null
      */
-    public List<String> getNodesByLabel(String label) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("Graph.getNodesByLabel() is not yet implemented");
+    public List<String> getNodesByLabel(String label) { // Adds duplicates
+        checkRep();
+
+        if (label == null) {
+            throw new NullPointerException();
+        }
+
+        List<String> nodes = new ArrayList<>();
+
+        for (String node : graph.keySet()) {
+            for (Edge edge : graph.get(node)) {
+                if (edge.getLabel().equals(label)) {
+                    nodes.add(edge.getSrc());
+                    nodes.add(edge.getDst());
+                }
+            }
+        }
+
+        checkRep();
+
+        return nodes;
     }
 
     /**
@@ -164,8 +200,25 @@ public class Graph implements Iterable<String> {
      * @throws NullPointerException if label == null
      */
     public List<Edge> getEdgesByLabel(String label) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("Graph.getEdgesByLabel() is not yet implemented");
+        checkRep();
+
+        if (label == null) {
+            throw new NullPointerException();
+        }
+
+        List<Edge> edges = new ArrayList<>();
+
+        for (String node : graph.keySet()) {
+            for (Edge edge : graph.get(node)) {
+                if (edge.getLabel().equals(label)) {
+                    edges.add(edge);
+                }
+            }
+        }
+
+        checkRep();
+
+        return edges;
     }
 
     /**
@@ -176,8 +229,25 @@ public class Graph implements Iterable<String> {
      * @throws NullPointerException if nodeData == null
      */
     public List<Edge> getIncomingEdges(String nodeData) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("Graph.getIncomingEdges() is not yet implemented");
+        checkRep();
+
+        if (nodeData == null) {
+            throw new NullPointerException();
+        }
+
+        List<Edge> edges = new ArrayList<>();
+
+        for (String node : graph.keySet()) {
+            for (Edge edge : graph.get(node)) {
+                if (edge.getDst().equals(nodeData)) {
+                    edges.add(edge);
+                }
+            }
+        }
+
+        checkRep();
+
+        return edges;
     }
 
     /**
@@ -188,8 +258,25 @@ public class Graph implements Iterable<String> {
      * @throws NullPointerException if nodeData == null
      */
     public List<Edge> getOutgoingEdges(String nodeData) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("Graph.getOutgoingEdges() is not yet implemented");
+        checkRep();
+
+        if (nodeData == null) {
+            throw new NullPointerException();
+        }
+
+        List<Edge> edges = new ArrayList<>();
+
+        for (String node : graph.keySet()) {
+            for (Edge edge : graph.get(node)) {
+                if (edge.getSrc().equals(nodeData)) {
+                    edges.add(edge);
+                }
+            }
+        }
+
+        checkRep();
+
+        return edges;
     }
 
     /**
@@ -200,8 +287,17 @@ public class Graph implements Iterable<String> {
      * @throws NullPointerException if nodeData == null
      */
     public boolean containsNode(String nodeData) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("Graph.containsNode() is not yet implemented");
+        checkRep();
+
+        if (nodeData == null) {
+            throw new NullPointerException();
+        }
+
+        boolean result = graph.containsKey(nodeData);
+
+        checkRep();
+
+        return result;
     }
 
     /**
@@ -214,8 +310,24 @@ public class Graph implements Iterable<String> {
      * @throws NullPointerException if label == null || src == null || dst == null
      */
     public boolean containsEdge(String label, String src, String dst) {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("Graph.containsEdge() is not yet implemented");
+        checkRep();
+
+        if (label == null || src == null || dst == null) {
+            throw new NullPointerException();
+        }
+
+        for (String node : graph.keySet()) {
+            for (Edge edge : graph.get(node)) {
+                if (edge.equals(new Edge(label, src, dst))) {
+                    checkRep();
+                    return true;
+                }
+            }
+        }
+
+        checkRep();
+
+        return false;
     }
 
     /**
@@ -225,10 +337,14 @@ public class Graph implements Iterable<String> {
      */
     @Override
     public Iterator<String> iterator() {
-        // TODO: Fill in this method, then remove the RuntimeException
-        throw new RuntimeException("Graph.iterator() is not yet implemented");
-    }
+        checkRep();
 
+        Iterator<String> nodeIterator = graph.keySet().iterator();
+
+        checkRep();
+
+        return nodeIterator;
+    }
 
     /**
      * Edge is an immutable connection between two nodes with direction and a label
@@ -236,6 +352,21 @@ public class Graph implements Iterable<String> {
      * Each Edge can be described by src - dst (L), where src points to dst and L is the label
      */
     public static class Edge {
+        private final String label;
+        private final String src;
+        private final String dst;
+
+        // Abstraction Function:
+        //
+        // Rep Invariant:
+        // label != null && src != null && dst != null
+
+        private void checkRep() { // Should we add javadoc to private methods or normal comments?
+            assert label != null; // Intellij says this is always true
+            assert src != null;
+            assert dst != null;
+        }
+
         /**
          * @param label the label to apply to the connection from src to dst
          * @param src the src node from which the edge starts
@@ -244,8 +375,13 @@ public class Graph implements Iterable<String> {
          * @spec.effects Constructs a new Edge, src - dst (label)
          */
         public Edge(String label, String src, String dst) {
-            // TODO: Fill in this method, then remove the RuntimeException
-            throw new RuntimeException("Edge.constructor is not yet implemented");
+            if (label == null || src == null || dst == null) {
+                throw new NullPointerException();
+            }
+
+            this.label = label;
+            this.src = src;
+            this.dst = dst;
         }
 
         /**
@@ -254,8 +390,9 @@ public class Graph implements Iterable<String> {
          * @return if this = src - dst (L), then returns L
          */
         public String getLabel() {
-            // TODO: Fill in this method, then remove the RuntimeException
-            throw new RuntimeException("Edge.getLabel() is not yet implemented");
+            checkRep();
+
+            return label;
         }
 
         /**
@@ -264,8 +401,9 @@ public class Graph implements Iterable<String> {
          * @return if this = src - dst (L), then returns src
          */
         public String getSrc() {
-            // TODO: Fill in this method, then remove the RuntimeException
-            throw new RuntimeException("Edge.getSrc() is not yet implemented");
+            checkRep();
+
+            return src;
         }
 
         /**
@@ -274,8 +412,9 @@ public class Graph implements Iterable<String> {
          * @return if this = src - dst (L), then returns dst
          */
         public String getDst() {
-            // TODO: Fill in this method, then remove the RuntimeException
-            throw new RuntimeException("Edge.getDst() is not yet implemented");
+            checkRep();
+
+            return dst;
         }
 
         /**
@@ -285,8 +424,13 @@ public class Graph implements Iterable<String> {
          */
         @Override
         public int hashCode() {
-            // TODO: Fill in this method, then remove the RuntimeException
-            throw new RuntimeException("Edge.hashCode() is not yet implemented");
+            checkRep();
+
+            int result = 31 * 31 * label.hashCode() + 31 * src.hashCode() + dst.hashCode();
+
+            checkRep();
+
+            return result;
         }
 
         /**
@@ -298,8 +442,24 @@ public class Graph implements Iterable<String> {
          */
         @Override
         public boolean equals(Object obj) {
-            // TODO: Fill in this method, then remove the RuntimeException
-            throw new RuntimeException("Edge.equals() is not yet implemented");
+            checkRep();
+
+            if (!(obj instanceof Edge)) {
+                checkRep();
+                return false;
+            }
+
+            Edge edge = (Edge) obj;
+
+            boolean result = this.label.equals(edge.label) &&
+                    this.src.equals(edge.src) && this.dst.equals(edge.dst);
+
+            checkRep();
+
+            return result;
         }
     }
+
+    // Computationally expensive searching by label
+    // Adjacency list interpretation => Values are edges where src is the key or both src and dst
 }
