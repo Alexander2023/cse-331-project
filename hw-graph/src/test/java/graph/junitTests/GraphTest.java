@@ -1,26 +1,32 @@
 package graph.junitTests;
 
 import graph.Graph;
+import org.junit.Before;
 import org.junit.Test;
-
-import javax.swing.undo.StateEdit;
-import java.util.Arrays;
+import org.junit.Rule;
+import org.junit.rules.Timeout;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class GraphTest {
+    private Graph g;
+
+    @Rule public Timeout globalTimeout = Timeout.seconds(10); // 10 seconds max per method tested
+
+    @Before
+    public void setUp() {
+        g = new Graph();
+    }
+
     @Test
     public void testAddNullNode() {
-        Graph g = new Graph();
-
         assertFalse(g.addNode(null));
     }
 
     @Test
     public void testAddNonUniqueNode() {
-        Graph g = new Graph();
         g.addNode("n1");
 
         assertFalse(g.addNode("n1"));
@@ -28,7 +34,6 @@ public class GraphTest {
 
     @Test
     public void testAddNullEdge() {
-        Graph g = new Graph();
         g.addNode("n1");
         g.addNode("n2");
 
@@ -37,14 +42,11 @@ public class GraphTest {
 
     @Test
     public void testAddEdgeWithNonexistentNodes() {
-        Graph g = new Graph();
-
         assertFalse(g.addEdge("e1", "n1", "n2"));
     }
 
     @Test
     public void testAddEdgeWithNonUniqueLabel() {
-        Graph g = new Graph();
         g.addNode("n1");
         g.addNode("n2");
         g.addEdge("e1", "n1", "n2");
@@ -54,19 +56,16 @@ public class GraphTest {
 
     @Test (expected = NullPointerException.class)
     public void testGetChildrenWithNullParent() {
-        Graph g = new Graph();
         g.getChildren(null);
     }
 
     @Test (expected = NullPointerException.class)
     public void testGetParentsWithNullChild() {
-        Graph g = new Graph();
         g.getParents(null);
     }
 
     @Test
     public void testGetParentsOneParent() {
-        Graph g = new Graph();
         g.addNode("n1");
         g.addNode("n2");
         g.addEdge("e1", "n1", "n2");
@@ -79,7 +78,6 @@ public class GraphTest {
 
     @Test
     public void testGetParentsTwoDiffParents() {
-        Graph g = new Graph();
         g.addNode("n1");
         g.addNode("n2");
         g.addNode("n3");
@@ -96,13 +94,11 @@ public class GraphTest {
 
     @Test (expected = NullPointerException.class)
     public void testGetNodesByLabelWithNullLabel() {
-        Graph g = new Graph();
         g.getNodesByLabel(null);
     }
 
     @Test
     public void testGetNodesByLabelNoEdge() {
-        Graph g = new Graph();
         g.addNode("n1");
         g.addNode("n2");
 
@@ -113,7 +109,6 @@ public class GraphTest {
 
     @Test
     public void testGetNodesByLabelOneLabel() {
-        Graph g = new Graph();
         g.addNode("n1");
         g.addNode("n2");
         g.addEdge("e1", "n1", "n2");
@@ -128,7 +123,6 @@ public class GraphTest {
 
     @Test
     public void testGetNodesByLabelTwoLabelsDiffPairs() {
-        Graph g = new Graph();
         g.addNode("n1");
         g.addNode("n2");
         g.addNode("n3");
@@ -148,13 +142,11 @@ public class GraphTest {
 
     @Test (expected = NullPointerException.class)
     public void testGetEdgesByLabelWithNullLabel() {
-        Graph g = new Graph();
         g.getEdgesByLabel(null);
     }
 
     @Test
     public void testGetEdgesByLabelOneEdge() {
-        Graph g = new Graph();
         g.addNode("n1");
         g.addNode("n2");
         g.addEdge("e1", "n1", "n2");
@@ -167,7 +159,6 @@ public class GraphTest {
 
     @Test
     public void testGetEdgesByLabelTwoEdgesDiffPairs() { // Check if lack of sorting causes bug
-        Graph g = new Graph();
         g.addNode("n1");
         g.addNode("n2");
         g.addNode("n3");
@@ -185,13 +176,11 @@ public class GraphTest {
 
     @Test (expected = NullPointerException.class)
     public void testGetIncomingEdgesWithNullNode() {
-        Graph g = new Graph();
         g.getIncomingEdges(null);
     }
 
     @Test
     public void testGetIncomingEdgesWithOneEdge() {
-        Graph g = new Graph();
         g.addNode("n1");
         g.addNode("n2");
         g.addEdge("e1", "n1", "n2");
@@ -204,7 +193,6 @@ public class GraphTest {
 
     @Test
     public void testGetIncomingEdgesWithTwoEdges() {
-        Graph g = new Graph();
         g.addNode("n1");
         g.addNode("n2");
         g.addNode("n3");
@@ -229,13 +217,11 @@ public class GraphTest {
 
     @Test (expected = NullPointerException.class)
     public void testGetOutgoingEdgesWithNullNode() {
-        Graph g = new Graph();
         g.getOutgoingEdges(null);
     }
 
     @Test
     public void testGetOutgoingEdgesWithOneEdge() {
-        Graph g = new Graph();
         g.addNode("n1");
         g.addNode("n2");
         g.addEdge("e1", "n1", "n2");
@@ -248,7 +234,6 @@ public class GraphTest {
 
     @Test
     public void testGetOutgoingEdgesWithTwoEdges() {
-        Graph g = new Graph();
         g.addNode("n1");
         g.addNode("n2");
         g.addNode("n3");
@@ -273,13 +258,11 @@ public class GraphTest {
 
     @Test (expected = NullPointerException.class)
     public void testContainsNodeWithNullNode() {
-        Graph g = new Graph();
         g.containsNode(null);
     }
 
     @Test
     public void testContainsNodeWithExistingNode() {
-        Graph g = new Graph();
         g.addNode("n1");
 
         assertTrue(g.containsNode("n1"));
@@ -287,7 +270,6 @@ public class GraphTest {
 
     @Test
     public void testContainsNodeWithNonexistentNode() {
-        Graph g = new Graph();
         g.addNode("n1");
 
         assertFalse(g.containsNode("n2"));
@@ -295,13 +277,11 @@ public class GraphTest {
 
     @Test (expected = NullPointerException.class)
     public void testContainsEdgeWithNullEdge() {
-        Graph g = new Graph();
         g.containsEdge(null, null, null);
     }
 
     @Test
     public void testContainsEdgeWithExistingEdge() {
-        Graph g = new Graph();
         g.addNode("n1");
         g.addNode("n2");
         g.addEdge("e1", "n1", "n2");
@@ -311,7 +291,6 @@ public class GraphTest {
 
     @Test
     public void testContainsEdgeWithNonexistentEdge() {
-        Graph g = new Graph();
         g.addNode("n1");
         g.addNode("n2");
         g.addEdge("e1", "n1", "n2");
