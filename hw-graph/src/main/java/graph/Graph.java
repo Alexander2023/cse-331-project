@@ -29,6 +29,9 @@ public class Graph implements Iterable<String> {
     // graph doesn't contain duplicate nodes &&
     // no edge with same src and dst nodes has duplicate labels
 
+    /**
+     * Checks that the rep is maintained
+     */
     private void checkRep() {
         assert graph != null;
 
@@ -85,29 +88,16 @@ public class Graph implements Iterable<String> {
         checkRep();
 
         if (label == null || src == null || dst == null ||
-            !graph.containsKey(src) || !graph.containsKey(dst) ||
-            !isUniqueLabel(label, src, dst)) {
+            !graph.containsKey(src) || !graph.containsKey(dst)) {
             checkRep();
             return false;
         }
 
-        graph.get(src).add(new Edge(label, src, dst));
+        boolean result = graph.get(src).add(new Edge(label, src, dst));
 
         checkRep();
 
-        return true;
-    }
-
-    private boolean isUniqueLabel(String label, String src, String dst) {
-        Set<Edge> edges = graph.get(src);
-
-        for (Edge edge : edges) {
-            if (edge.getDst().equals(dst) && edge.getLabel().equals(label)) {
-                return false;
-            }
-        }
-
-        return true;
+        return result;
     }
 
     /**
@@ -162,36 +152,6 @@ public class Graph implements Iterable<String> {
         checkRep();
 
         return children;
-    }
-
-    /**
-     * Returns the nodes connected, both to and from, edge containing label
-     *
-     * @param label the label of the edge whose connected nodes are to be received
-     * @return all nodes ni and nj such that ni - nj (label) where i,j are arbitrary
-     * @throws NullPointerException if label == null
-     */
-    public List<String> getNodesByLabel(String label) { // Adds duplicates
-        checkRep(); // design decision
-
-        if (label == null) {
-            throw new NullPointerException();
-        }
-
-        List<String> nodes = new ArrayList<>();
-
-        for (String node : graph.keySet()) {
-            for (Edge edge : graph.get(node)) {
-                if (edge.getLabel().equals(label)) {
-                    nodes.add(edge.getSrc());
-                    nodes.add(edge.getDst());
-                }
-            }
-        }
-
-        checkRep();
-
-        return nodes;
     }
 
     /**
@@ -259,7 +219,7 @@ public class Graph implements Iterable<String> {
      * @return all edges nodeData - ni (Li) where i is arbitrary
      * @throws NullPointerException if nodeData == null
      */
-    public List<Edge> getOutgoingEdges(String nodeData) {
+    public List<Edge> getOutgoingEdges(String nodeData) { // Double check
         checkRep();
 
         if (nodeData == null) {
@@ -268,12 +228,9 @@ public class Graph implements Iterable<String> {
 
         List<Edge> edges = new ArrayList<>();
 
-        for (String node : graph.keySet()) {
-            for (Edge edge : graph.get(node)) {
-                if (edge.getSrc().equals(nodeData)) {
-                    edges.add(edge);
-                }
-            }
+        Set<Edge> temp = graph.get(nodeData);
+        if (temp != null) {
+            edges.addAll(temp);
         }
 
         checkRep();
@@ -318,12 +275,12 @@ public class Graph implements Iterable<String> {
             throw new NullPointerException();
         }
 
+        Edge edgeToCheck = new Edge(label, src, dst);
+
         for (String node : graph.keySet()) {
-            for (Edge edge : graph.get(node)) {
-                if (edge.equals(new Edge(label, src, dst))) {
-                    checkRep();
-                    return true;
-                }
+            if (graph.get(node).contains(edgeToCheck)) {
+                checkRep();
+                return true;
             }
         }
 
@@ -335,7 +292,8 @@ public class Graph implements Iterable<String> {
     /**
      * Returns an iterator of the nodes contained in the graph
      *
-     * @return an iterator of the nodes contained in the graph in no particular order
+     * @return an iterator of a read-only view of the nodes contained in
+     * the graph in no particular order
      */
     @Override
     public Iterator<String> iterator() {
@@ -365,7 +323,10 @@ public class Graph implements Iterable<String> {
         // Rep Invariant:
         // label != null && src != null && dst != null
 
-        private void checkRep() { // Should we add javadoc to private methods or normal comments? javadoc
+        /**
+         * Checks that the rep is maintained
+         */
+        private void checkRep() {
             assert label != null;
             assert src != null;
             assert dst != null;
@@ -430,7 +391,9 @@ public class Graph implements Iterable<String> {
         public int hashCode() {
             checkRep();
 
-            int result = 31 * 31 * label.hashCode() + 31 * src.hashCode() + dst.hashCode();
+            int result = label.hashCode();
+            result = 31 * result + src.hashCode();
+            result = 31 * result + dst.hashCode();
 
             checkRep();
 
@@ -456,14 +419,11 @@ public class Graph implements Iterable<String> {
             Edge edge = (Edge) obj;
 
             boolean result = this.label.equals(edge.label) &&
-                    this.src.equals(edge.src) && this.dst.equals(edge.dst);
+                             this.src.equals(edge.src) && this.dst.equals(edge.dst);
 
             checkRep();
 
             return result;
         }
     }
-
-    // Computationally expensive searching by label
-    // Adjacency list interpretation => Values are edges where src is the key or both src and dst
 }

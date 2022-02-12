@@ -93,54 +93,6 @@ public class GraphTest {
     }
 
     @Test (expected = NullPointerException.class)
-    public void testGetNodesByLabelWithNullLabel() {
-        g.getNodesByLabel(null);
-    }
-
-    @Test
-    public void testGetNodesByLabelNoEdge() {
-        g.addNode("n1");
-        g.addNode("n2");
-
-        List<String> nodesByLabel = g.getNodesByLabel("e1");
-
-        assertEquals(0, nodesByLabel.size());
-    }
-
-    @Test
-    public void testGetNodesByLabelOneLabel() {
-        g.addNode("n1");
-        g.addNode("n2");
-        g.addEdge("e1", "n1", "n2");
-
-        List<String> nodesByLabel = g.getNodesByLabel("e1");
-        Collections.sort(nodesByLabel);
-
-        assertEquals(2, nodesByLabel.size());
-        assertEquals("n1", nodesByLabel.get(0));
-        assertEquals("n2", nodesByLabel.get(1));
-    }
-
-    @Test
-    public void testGetNodesByLabelTwoLabelsDiffPairs() {
-        g.addNode("n1");
-        g.addNode("n2");
-        g.addNode("n3");
-        g.addNode("n4");
-        g.addEdge("e1", "n1", "n2");
-        g.addEdge("e1", "n3", "n4");
-
-        List<String> nodesByLabel = g.getNodesByLabel("e1");
-        Collections.sort(nodesByLabel);
-
-        assertEquals(4, nodesByLabel.size());
-        assertEquals("n1", nodesByLabel.get(0));
-        assertEquals("n2", nodesByLabel.get(1));
-        assertEquals("n3", nodesByLabel.get(2));
-        assertEquals("n4", nodesByLabel.get(3));
-    }
-
-    @Test (expected = NullPointerException.class)
     public void testGetEdgesByLabelWithNullLabel() {
         g.getEdgesByLabel(null);
     }
@@ -295,7 +247,9 @@ public class GraphTest {
         g.addNode("n2");
         g.addEdge("e1", "n1", "n2");
 
-        assertFalse(g.containsEdge("e2", "n1", "n2"));
+        boolean b = g.containsEdge("e2", "n1", "n2");
+
+        assertFalse(b);
     }
 
     @Test (expected = NullPointerException.class)
