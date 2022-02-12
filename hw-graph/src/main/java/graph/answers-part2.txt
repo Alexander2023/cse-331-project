@@ -30,9 +30,8 @@ but the disadvantage of difficulty of implementation.
 chose it. If you chose to use a different representation than one of the three we described
 above, be sure to list its advantages and disadvantages, too.
 
-I chose rep B because it has O(1) time complexity for adding nodes and edges to the graph. Also
+I chose rep B because it has O(1) time complexity for adding nodes and edges to the graph. Also,
 since it will allow quick lookups for child nodes and outgoing edges associated with a node.
-
 
 ## Part 4
 ###########################################################################
@@ -42,11 +41,11 @@ since it will allow quick lookups for child nodes and outgoing edges associated 
 1. Describe any new tests you added and why you added them, or why you feel that your original
 tests alone are sufficient.
 
+I added a test for checking that an exception is thrown when attempting to remove an element from
+the iterator because I wanted to ensure defensive programming was being used to avoid rep exposure.
 
-
-
-2. Did you make any changes to your specifications as you were implementing your Graph? (yes/no)
+2. Did you make any changes to your specifications as you were implementing your Graph? yes
 If yes, describe your changes and why you made them.
 
-
-
+I added a description to the iterator method that it returns a read-only view of the nodes to
+ensure the client was aware that it was unmodifiable and to reflect the avoidance of rep exposure.
