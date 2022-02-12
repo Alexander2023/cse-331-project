@@ -18,6 +18,8 @@ import java.util.*;
  * All nodes in Graph are unique.
  */
 public class Graph implements Iterable<String> {
+    public static final boolean DEBUG = false;
+
     private Map<String, Set<Edge>> graph;
 
     // Abstraction Function:
@@ -27,9 +29,11 @@ public class Graph implements Iterable<String> {
     //
     // Rep Invariant:
     // graph != null &&
-    // for all i such that (0 <= i < graph.size()), graph.get(i) != null &&
+    // graph doesn't contain null nodes &&
+    // graph doesn't contain null collections of outgoing edges &&
+    // graph doesn't contain null edges &&
     // graph doesn't contain duplicate nodes &&
-    // no edge with same src and dst nodes has duplicate labels
+    // no edges with same src and dst nodes have duplicate labels
 
     /**
      * Checks that the rep is maintained
@@ -37,8 +41,18 @@ public class Graph implements Iterable<String> {
     private void checkRep() {
         assert graph != null;
 
-        for (String node : graph.keySet()) {
-            assert node != null;
+        if (DEBUG) {
+            for (String node : graph.keySet()) {
+                assert node != null;
+
+                Set<Edge> outgoingEdges = graph.get(node);
+
+                assert outgoingEdges != null;
+
+                for (Edge edge : outgoingEdges) {
+                    assert edge != null;
+                }
+            }
         }
     }
 
@@ -365,6 +379,8 @@ public class Graph implements Iterable<String> {
             this.label = label;
             this.src = src;
             this.dst = dst;
+
+            checkRep();
         }
 
         /**
