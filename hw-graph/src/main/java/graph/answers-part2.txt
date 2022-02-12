@@ -17,14 +17,21 @@ A few examples of possible Graph representations:
 representations listed above (for example, in terms of runtime complexity, space
 complexity, or ease of implementation).
 
+Rep A has the advantage of ease of implementation but the disadvantage of there being no association
+between edges of a given node.
 
+Rep B has the advantage of having associations of edges of a given node but the disadvantage
+of O(|V|) time complexity for checking whether two vertices are adjacent.
 
+Rep C has the advantage of O(1) time complexity for checking whether two vertices are adjacent
+but the disadvantage of difficulty of implementation.
 
 2. In two to three sentences, describe the representation you chose and explain why you
 chose it. If you chose to use a different representation than one of the three we described
 above, be sure to list its advantages and disadvantages, too.
 
-
+I chose rep B because it has O(1) time complexity for adding nodes and edges to the graph. Also
+since it will allow quick lookups for child nodes and outgoing edges associated with a node.
 
 
 ## Part 4
