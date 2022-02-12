@@ -233,7 +233,7 @@ public class Graph implements Iterable<String> {
      * @return all edges nodeData - ni (Li) where i is arbitrary
      * @throws NullPointerException if nodeData == null
      */
-    public List<Edge> getOutgoingEdges(String nodeData) { // Double check
+    public List<Edge> getOutgoingEdges(String nodeData) {
         checkRep();
 
         if (nodeData == null) {
@@ -242,9 +242,8 @@ public class Graph implements Iterable<String> {
 
         List<Edge> edges = new ArrayList<>();
 
-        Set<Edge> temp = graph.get(nodeData);
-        if (temp != null) {
-            edges.addAll(temp);
+        if (graph.containsKey(nodeData)) {
+            edges.addAll(graph.get(nodeData));
         }
 
         checkRep();
