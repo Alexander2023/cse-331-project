@@ -21,7 +21,9 @@ public class Graph implements Iterable<String> {
     private Map<String, Set<Edge>> graph;
 
     // Abstraction Function:
-    // AF(this) =
+    // A map of key/value pairs where keys are the nodes in the graph
+    // and values are a collection of the outgoing edges associated with
+    // a given node
     //
     // Rep Invariant:
     // graph != null &&
@@ -116,6 +118,8 @@ public class Graph implements Iterable<String> {
 
         List<String> children = new ArrayList<>();
 
+        // Inv: children contains all destination nodes of
+        // outgoing edges of parent from 0 to i-1
         for (Edge edge : graph.get(parent)) {
             children.add(edge.getDst());
         }
@@ -139,19 +143,23 @@ public class Graph implements Iterable<String> {
             throw new NullPointerException();
         }
 
-        List<String> children = new ArrayList<>();
+        List<String> parents = new ArrayList<>();
 
-        for (String node : graph.keySet()) { // Would loops over collections count as nontrivial and require inv?
+        // Inv: parents contains all source nodes of outgoing
+        // edges of nodes from 0 to i-1 where edge.getDst() == child
+        for (String node : graph.keySet()) {
+            // Inv: parents contains all source nodes of edges from
+            // 0 to j-1 where edge.getDst() == child
             for (Edge edge : graph.get(node)) {
                 if (edge.getDst().equals(child)) {
-                    children.add(edge.getSrc());
+                    parents.add(edge.getSrc());
                 }
             }
         }
 
         checkRep();
 
-        return children;
+        return parents;
     }
 
     /**
@@ -170,7 +178,10 @@ public class Graph implements Iterable<String> {
 
         List<Edge> edges = new ArrayList<>();
 
+        // Inv: edges contains outgoing edges of all nodes from
+        // 0 to i-1 where edge.getLabel() == label
         for (String node : graph.keySet()) {
+            // Inv: edges contains all edges from 0 to j-1 where edge.getLabel() == label
             for (Edge edge : graph.get(node)) {
                 if (edge.getLabel().equals(label)) {
                     edges.add(edge);
@@ -199,7 +210,10 @@ public class Graph implements Iterable<String> {
 
         List<Edge> edges = new ArrayList<>();
 
+        // Inv: edges contains outgoing edges of all nodes from
+        // 0 to i-1 where edge.getDst() == nodeData
         for (String node : graph.keySet()) {
+            // Inv: edges contains all edges from 0 to j-1 where edge.getDst() == nodeData
             for (Edge edge : graph.get(node)) {
                 if (edge.getDst().equals(nodeData)) {
                     edges.add(edge);
@@ -277,6 +291,8 @@ public class Graph implements Iterable<String> {
 
         Edge edgeToCheck = new Edge(label, src, dst);
 
+        // Inv: All nodes from 0 to i-1 don't contain
+        // edgeToCheck as one of their outgoing edges
         for (String node : graph.keySet()) {
             if (graph.get(node).contains(edgeToCheck)) {
                 checkRep();
@@ -319,6 +335,9 @@ public class Graph implements Iterable<String> {
         private final String dst;
 
         // Abstraction Function:
+        // label is the weight of the edge,
+        // src is the source node from which the directed edge starts,
+        // dst is the destination node to which the directed edge ends
         //
         // Rep Invariant:
         // label != null && src != null && dst != null
