@@ -6,6 +6,8 @@ import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.Timeout;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -110,7 +112,7 @@ public class GraphTest {
     }
 
     @Test
-    public void testGetEdgesByLabelTwoEdgesDiffPairs() { // Check if lack of sorting causes bug
+    public void testGetEdgesByLabelTwoEdgesDiffPairs() {
         g.addNode("n1");
         g.addNode("n2");
         g.addNode("n3");
@@ -119,6 +121,13 @@ public class GraphTest {
         g.addEdge("e1", "n3", "n4");
 
         List<Graph.Edge> edgesByLabel = g.getEdgesByLabel("e1");
+
+        Collections.sort(edgesByLabel, new Comparator<Graph.Edge>() {
+            @Override
+            public int compare(Graph.Edge o1, Graph.Edge o2) {
+                return o1.getSrc().compareTo(o2.getSrc());
+            }
+        });
 
         assertEquals(2, edgesByLabel.size());
 
@@ -153,18 +162,20 @@ public class GraphTest {
 
         List<Graph.Edge> incomingEdges = g.getIncomingEdges("n3");
 
+        Collections.sort(incomingEdges, new Comparator<Graph.Edge>() {
+            @Override
+            public int compare(Graph.Edge o1, Graph.Edge o2) {
+                return o1.getLabel().compareTo(o2.getLabel());
+            }
+        });
+
         assertEquals(2, incomingEdges.size());
 
         Graph.Edge e1 = new Graph.Edge("e1", "n1", "n3");
         Graph.Edge e2 = new Graph.Edge("e2", "n2", "n3");
 
-        if (incomingEdges.get(0).getSrc().equals("n1")) {
-            assertEquals(e1, incomingEdges.get(0));
-            assertEquals(e2, incomingEdges.get(1));
-        } else {
-            assertEquals(e1, incomingEdges.get(1));
-            assertEquals(e2, incomingEdges.get(0));
-        }
+        assertEquals(e1, incomingEdges.get(0));
+        assertEquals(e2, incomingEdges.get(1));
     }
 
     @Test (expected = NullPointerException.class)
@@ -194,18 +205,20 @@ public class GraphTest {
 
         List<Graph.Edge> outgoingEdges = g.getOutgoingEdges("n1");
 
+        Collections.sort(outgoingEdges, new Comparator<Graph.Edge>() {
+            @Override
+            public int compare(Graph.Edge o1, Graph.Edge o2) {
+                return o1.getLabel().compareTo(o2.getLabel());
+            }
+        });
+
         Graph.Edge e1 = new Graph.Edge("e1", "n1", "n2");
         Graph.Edge e2 = new Graph.Edge("e2", "n1", "n3");
 
         assertEquals(2, outgoingEdges.size());
 
-        if (outgoingEdges.get(0).getDst().equals("n2")) {
-            assertEquals(e1, outgoingEdges.get(0));
-            assertEquals(e2, outgoingEdges.get(1));
-        } else {
-            assertEquals(e1, outgoingEdges.get(1));
-            assertEquals(e2, outgoingEdges.get(0));
-        }
+        assertEquals(e1, outgoingEdges.get(0));
+        assertEquals(e2, outgoingEdges.get(1));
     }
 
     @Test (expected = NullPointerException.class)
@@ -247,9 +260,17 @@ public class GraphTest {
         g.addNode("n2");
         g.addEdge("e1", "n1", "n2");
 
-        boolean b = g.containsEdge("e2", "n1", "n2");
+        assertFalse(g.containsEdge("e2", "n1", "n2"));
+    }
 
-        assertFalse(b);
+    @Test (expected = UnsupportedOperationException.class)
+    public void testRemoveFromReadOnlyIterator() {
+        g.addNode("n1");
+
+        Iterator<String> nodes = g.iterator();
+
+        nodes.next();
+        nodes.remove();
     }
 
     @Test (expected = NullPointerException.class)
