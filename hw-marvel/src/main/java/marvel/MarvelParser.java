@@ -11,15 +11,19 @@
 
 package marvel;
 
+import graph.Graph;
+
 import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
  * Parser utility to load the Marvel Comics dataset.
  */
 public class MarvelParser {
-
     /**
      * Reads the Marvel Universe dataset. Each line of the input file contains a character name and a
      * comic book the character appeared in, separated by a comma character
@@ -27,14 +31,20 @@ public class MarvelParser {
      * @spec.requires filename is a valid file in the resources/data folder.
      * @param filename the file that will be read
      */
-    // TODO: Replace 'void' with the type you want the parser to produce
-    public static void parseData(String filename) {
+    public static Map<String, List<String>> parseData(String filename) {
         List<String> lines = readLines(filename);
 
-        // TODO: Complete this method
-        // You'll need to:
-        //  - Split each line into its individual parts
-        //  - Collect the data into some convenient data structure(s) to return to the graph building code
+        Map<String, List<String>> parsedData = new HashMap<>();
+
+        for (String line : lines) {
+            String[] split = line.split(",");
+            if (!parsedData.containsKey(split[1])) {
+                parsedData.put(split[1], new ArrayList<>());
+            }
+            parsedData.get(split[1]).add(split[0]);
+        }
+
+        return parsedData;
     }
 
     /**
@@ -62,5 +72,28 @@ public class MarvelParser {
             throw new IllegalArgumentException("No such file: " + filename);
         }
         return new BufferedReader(new InputStreamReader(stream)).lines().collect(Collectors.toList());
+    }
+
+    public static Graph buildGraph(Map<String, List<String>> parsedData) {
+        Graph graph = new Graph();
+
+        for (String book : parsedData.keySet()) {
+            List<String> characters = parsedData.get(book);
+
+            for (String character : characters) {
+                graph.addNode(character);
+            }
+
+            if (characters.size() > 1) {
+                for (int i = 0; i < characters.size() - 1; i++) {
+                    for (int j = i + 1; j < characters.size(); j++) {
+                        graph.addEdge(book, characters.get(i), characters.get(j));
+                        graph.addEdge(book, characters.get(j), characters.get(i));
+                    }
+                }
+            }
+        }
+
+        return graph;
     }
 }
