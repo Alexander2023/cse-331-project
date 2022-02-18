@@ -1,0 +1,15 @@
+# Tests that BFS chooses the lexicographically least path when two paths of same length
+
+CreateGraph g
+
+AddNode g c1
+AddNode g c2
+AddNode g c3
+AddNode g c4
+
+AddEdge g c1 c2 b1
+AddEdge g c2 c4 b2
+AddEdge g c1 c3 b3
+AddEdge g c3 c4 b4
+
+FindPath g c1 c4

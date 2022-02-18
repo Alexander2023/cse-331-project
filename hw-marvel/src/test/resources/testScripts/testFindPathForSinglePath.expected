@@ -1,0 +1,14 @@
+# Tests that a path is found when there is only one possible path
+
+created graph g
+
+added node c1 to g
+added node c2 to g
+added node c3 to g
+
+added edge b1 from c1 to c2 in g
+added edge b2 from c2 to c3 in g
+
+path from c1 to c3:
+c1 to c2 via b1
+c2 to c3 via b2

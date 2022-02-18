@@ -1,0 +1,7 @@
+# Tests that path finding works properly when asked to find the path from a node to itself
+
+created graph g
+
+added node c1 to g
+
+path from c1 to c1:

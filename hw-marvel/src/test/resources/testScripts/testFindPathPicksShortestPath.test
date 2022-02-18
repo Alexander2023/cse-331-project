@@ -1,0 +1,13 @@
+# Tests that path finding applies BFS properly by choosing the shorter of two paths
+
+CreateGraph g
+
+AddNode g c1
+AddNode g c2
+AddNode g c3
+
+AddEdge g c1 c2 b1
+AddEdge g c2 c3 b2
+AddEdge g c1 c3 b3
+
+FindPath g c1 c3

@@ -1,0 +1,7 @@
+# Tests that the edges in the csv file are added to the graph
+
+LoadGraph small small.csv
+
+ListChildren small c1
+ListChildren small c2
+ListChildren small c3

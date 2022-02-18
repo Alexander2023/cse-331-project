@@ -1,0 +1,7 @@
+# Tests that the edges in the csv file are added to the graph
+
+loaded graph small
+
+the children of c1 in small are: c2(b1)
+the children of c2 in small are: c1(b1)
+the children of c3 in small are:

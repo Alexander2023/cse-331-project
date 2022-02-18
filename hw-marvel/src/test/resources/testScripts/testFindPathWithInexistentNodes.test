@@ -1,0 +1,5 @@
+# Tests that path finding works properly when asked to find path between inexistent nodes
+
+CreateGraph g
+
+FindPath g c1 c2

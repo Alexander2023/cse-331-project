@@ -1,0 +1,5 @@
+# Tests that the nodes in the csv file are added to the graph
+
+LoadGraph small small.csv
+
+ListNodes small

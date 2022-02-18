@@ -1,0 +1,6 @@
+# Tests that duplicates in csv file are not added to the loaded graph
+
+loaded graph smallWithDuplicates
+
+the children of c1 in smallWithDuplicates are: c2(b1)
+the children of c2 in smallWithDuplicates are: c1(b1)

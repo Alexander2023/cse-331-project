@@ -1,0 +1,6 @@
+# Tests that path finding works properly when asked to find path between inexistent nodes
+
+created graph g
+
+unknown: c1
+unknown: c2

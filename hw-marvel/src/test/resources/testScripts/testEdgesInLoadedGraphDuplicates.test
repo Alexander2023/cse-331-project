@@ -1,0 +1,6 @@
+# Tests that duplicates in csv file are not added to the loaded graph
+
+LoadGraph smallWithDuplicates smallWithDuplicates.csv
+
+ListChildren smallWithDuplicates c1
+ListChildren smallWithDuplicates c2

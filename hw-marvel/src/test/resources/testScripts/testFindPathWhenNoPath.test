@@ -1,0 +1,9 @@
+# Tests that path finding works properly when there is no path between existing nodes
+
+CreateGraph g
+
+AddNode g c1
+
+AddNode g c2
+
+FindPath g c1 c2
