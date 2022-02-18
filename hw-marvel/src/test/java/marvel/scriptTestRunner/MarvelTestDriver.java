@@ -26,6 +26,8 @@ public class MarvelTestDriver {
     // ***  JUnit Test Driver  ***
     // ***************************
 
+    // This is a container for related functionality, not an ADT
+
     /**
      * String -> Graph: maps the names of graphs to the actual graph
      **/
@@ -210,7 +212,7 @@ public class MarvelTestDriver {
 
         List<Graph.Edge> edges = graph.getOutgoingEdges(parentName);
 
-        Collections.sort(edges, new Comparator<Graph.Edge>() {
+        Collections.sort(edges, new Comparator<>() {
             @Override
             public int compare(Graph.Edge e1, Graph.Edge e2) {
                 int dstComparison = e1.getDst().compareTo(e2.getDst());

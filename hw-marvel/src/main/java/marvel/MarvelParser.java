@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
  * Parser utility to load the Marvel Comics dataset.
  */
 public class MarvelParser {
+    // This is a container for related functionality, not an ADT
+
     /**
      * Reads the Marvel Universe dataset. Each line of the input file contains a character name and a
      * comic book the character appeared in, separated by a comma character
@@ -34,6 +36,7 @@ public class MarvelParser {
 
         Map<String, List<String>> parsedData = new HashMap<>();
 
+        // Inv: All line data from 0 to i-1 has been added to parsedData
         for (String line : lines) {
             String[] split = line.split(",");
             if (!parsedData.containsKey(split[1])) {
