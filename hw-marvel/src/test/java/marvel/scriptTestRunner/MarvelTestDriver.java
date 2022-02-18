@@ -32,7 +32,7 @@ public class MarvelTestDriver {
      * String -> Graph: maps the names of graphs to the actual graph
      **/
     private final Map<String, Graph> graphs = new HashMap<>();
-    private final PrintWriter output; // Should these be kept as Reader/Writer?
+    private final PrintWriter output;
     private final BufferedReader input;
 
     /**
