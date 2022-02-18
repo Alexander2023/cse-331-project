@@ -5,7 +5,8 @@ import graph.Graph;
 import java.util.*;
 
 /**
- * Path finding utility for a graph
+ * Path finding and graph building utility for Marvel characters that are connected
+ * by the comic books they appear in
  */
 public class MarvelPaths {
     private static final String marvelFile = "marvel.csv";
