@@ -12,7 +12,7 @@
 package marvel.scriptTestRunner;
 
 import graph.Graph;
-import marvel.MarvelParser;
+import marvel.MarvelPaths;
 
 import java.io.*;
 import java.util.*;
@@ -244,9 +244,7 @@ public class MarvelTestDriver {
     }
 
     private void loadGraph(String graphName, String file) {
-        Map<String, List<String>> parsedData = MarvelParser.parseData(file);
-
-        graphs.put(graphName, MarvelParser.buildGraph(parsedData));
+        graphs.put(graphName, MarvelPaths.buildGraph(file));
 
         output.println("loaded graph " + graphName);
     }
@@ -265,8 +263,6 @@ public class MarvelTestDriver {
 
     private void findPath(String graphName, String src, String dst) {
         Graph graph = graphs.get(graphName);
-        Queue<String> workList = new LinkedList<>();
-        Map<String, List<Graph.Edge>> visited = new HashMap<>();
 
         if (!graph.containsNode(src) || !graph.containsNode(dst)) {
             if (!graph.containsNode(src)) {
@@ -282,47 +278,17 @@ public class MarvelTestDriver {
 
         output.println("path from " + src + " to " + dst + ":");
 
-        workList.add(src);
-        visited.put(src, new ArrayList<>());
+        if (!src.equals(dst)) {
+            List<Graph.Edge> path = MarvelPaths.findPath(graph, src, dst);
 
-        while (!workList.isEmpty()) {
-            String node = workList.remove();
-
-            if (node.equals(dst)) {
-                for (Graph.Edge edge : visited.get(node)) {
+            if (path == null) {
+                output.println("no path found");
+            } else {
+                for (Graph.Edge edge : path) {
                     output.println(edge.getSrc() + " to " + edge.getDst() + " via " + edge.getLabel());
-                }
-
-                return;
-            }
-
-            List<Graph.Edge> outgoingEdges = graph.getOutgoingEdges(node);
-
-            Collections.sort(outgoingEdges, new Comparator<Graph.Edge>() { // are comparators or streams preferred?
-                @Override
-                public int compare(Graph.Edge e1, Graph.Edge e2) {
-                    int dstComparison = e1.getDst().compareTo(e2.getDst());
-
-                    if (dstComparison != 0) {
-                        return dstComparison;
-                    }
-
-                    return e1.getLabel().compareTo(e2.getLabel());
-                }
-            });
-
-            for (Graph.Edge edge : outgoingEdges) {
-                if (!visited.containsKey(edge.getDst())) {
-                    List<Graph.Edge> copy = new ArrayList<>(visited.get(node));
-                    copy.add(edge);
-
-                    visited.put(edge.getDst(), copy);
-                    workList.add(edge.getDst());
                 }
             }
         }
-
-        output.println("no path found");
     }
 
     /**

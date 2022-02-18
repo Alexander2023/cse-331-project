@@ -11,8 +11,6 @@
 
 package marvel;
 
-import graph.Graph;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,28 +70,5 @@ public class MarvelParser {
             throw new IllegalArgumentException("No such file: " + filename);
         }
         return new BufferedReader(new InputStreamReader(stream)).lines().collect(Collectors.toList());
-    }
-
-    public static Graph buildGraph(Map<String, List<String>> parsedData) {
-        Graph graph = new Graph();
-
-        for (String book : parsedData.keySet()) {
-            List<String> characters = parsedData.get(book);
-
-            for (String character : characters) {
-                graph.addNode(character);
-            }
-
-            if (characters.size() > 1) {
-                for (int i = 0; i < characters.size() - 1; i++) {
-                    for (int j = i + 1; j < characters.size(); j++) {
-                        graph.addEdge(book, characters.get(i), characters.get(j));
-                        graph.addEdge(book, characters.get(j), characters.get(i));
-                    }
-                }
-            }
-        }
-
-        return graph;
     }
 }
