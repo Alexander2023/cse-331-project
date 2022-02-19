@@ -13,13 +13,13 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class GraphTest {
-    private Graph g;
+    private Graph<String, String> g;
 
     @Rule public Timeout globalTimeout = Timeout.seconds(10); // 10 seconds max per method tested
 
     @Before
     public void setUp() {
-        g = new Graph();
+        g = new Graph<>();
     }
 
     @Test
@@ -105,10 +105,10 @@ public class GraphTest {
         g.addNode("n2");
         g.addEdge("e1", "n1", "n2");
 
-        List<Graph.Edge> edgesByLabel = g.getEdgesByLabel("e1");
+        List<Graph.Edge<String, String>> edgesByLabel = g.getEdgesByLabel("e1");
 
         assertEquals(1, edgesByLabel.size());
-        assertEquals(new Graph.Edge("e1", "n1", "n2"), edgesByLabel.get(0));
+        assertEquals(new Graph.Edge<>("e1", "n1", "n2"), edgesByLabel.get(0));
     }
 
     @Test
@@ -120,19 +120,19 @@ public class GraphTest {
         g.addEdge("e1", "n1", "n2");
         g.addEdge("e1", "n3", "n4");
 
-        List<Graph.Edge> edgesByLabel = g.getEdgesByLabel("e1");
+        List<Graph.Edge<String, String>> edgesByLabel = g.getEdgesByLabel("e1");
 
-        Collections.sort(edgesByLabel, new Comparator<Graph.Edge>() {
+        Collections.sort(edgesByLabel, new Comparator<>() {
             @Override
-            public int compare(Graph.Edge o1, Graph.Edge o2) {
+            public int compare(Graph.Edge<String, String> o1, Graph.Edge<String, String> o2) {
                 return o1.getSrc().compareTo(o2.getSrc());
             }
         });
 
         assertEquals(2, edgesByLabel.size());
 
-        assertEquals(new Graph.Edge("e1", "n1", "n2"), edgesByLabel.get(0));
-        assertEquals(new Graph.Edge("e1", "n3", "n4"), edgesByLabel.get(1));
+        assertEquals(new Graph.Edge<>("e1", "n1", "n2"), edgesByLabel.get(0));
+        assertEquals(new Graph.Edge<>("e1", "n3", "n4"), edgesByLabel.get(1));
     }
 
     @Test (expected = NullPointerException.class)
@@ -146,10 +146,10 @@ public class GraphTest {
         g.addNode("n2");
         g.addEdge("e1", "n1", "n2");
 
-        List<Graph.Edge> incomingEdges = g.getIncomingEdges("n2");
+        List<Graph.Edge<String, String>> incomingEdges = g.getIncomingEdges("n2");
 
         assertEquals(1, incomingEdges.size());
-        assertEquals(new Graph.Edge("e1", "n1", "n2"), incomingEdges.get(0));
+        assertEquals(new Graph.Edge<>("e1", "n1", "n2"), incomingEdges.get(0));
     }
 
     @Test
@@ -160,19 +160,19 @@ public class GraphTest {
         g.addEdge("e1", "n1", "n3");
         g.addEdge("e2", "n2", "n3");
 
-        List<Graph.Edge> incomingEdges = g.getIncomingEdges("n3");
+        List<Graph.Edge<String, String>> incomingEdges = g.getIncomingEdges("n3");
 
-        Collections.sort(incomingEdges, new Comparator<Graph.Edge>() {
+        Collections.sort(incomingEdges, new Comparator<>() {
             @Override
-            public int compare(Graph.Edge o1, Graph.Edge o2) {
+            public int compare(Graph.Edge<String, String> o1, Graph.Edge<String, String> o2) {
                 return o1.getLabel().compareTo(o2.getLabel());
             }
         });
 
         assertEquals(2, incomingEdges.size());
 
-        Graph.Edge e1 = new Graph.Edge("e1", "n1", "n3");
-        Graph.Edge e2 = new Graph.Edge("e2", "n2", "n3");
+        Graph.Edge<String, String> e1 = new Graph.Edge<>("e1", "n1", "n3");
+        Graph.Edge<String, String> e2 = new Graph.Edge<>("e2", "n2", "n3");
 
         assertEquals(e1, incomingEdges.get(0));
         assertEquals(e2, incomingEdges.get(1));
@@ -189,10 +189,10 @@ public class GraphTest {
         g.addNode("n2");
         g.addEdge("e1", "n1", "n2");
 
-        List<Graph.Edge> outgoingEdges = g.getOutgoingEdges("n1");
+        List<Graph.Edge<String, String>> outgoingEdges = g.getOutgoingEdges("n1");
 
         assertEquals(1, outgoingEdges.size());
-        assertEquals(new Graph.Edge("e1", "n1", "n2"), outgoingEdges.get(0));
+        assertEquals(new Graph.Edge<>("e1", "n1", "n2"), outgoingEdges.get(0));
     }
 
     @Test
@@ -203,17 +203,17 @@ public class GraphTest {
         g.addEdge("e1", "n1", "n2");
         g.addEdge("e2", "n1", "n3");
 
-        List<Graph.Edge> outgoingEdges = g.getOutgoingEdges("n1");
+        List<Graph.Edge<String, String>> outgoingEdges = g.getOutgoingEdges("n1");
 
-        Collections.sort(outgoingEdges, new Comparator<Graph.Edge>() {
+        Collections.sort(outgoingEdges, new Comparator<>() {
             @Override
-            public int compare(Graph.Edge o1, Graph.Edge o2) {
+            public int compare(Graph.Edge<String, String> o1, Graph.Edge<String, String> o2) {
                 return o1.getLabel().compareTo(o2.getLabel());
             }
         });
 
-        Graph.Edge e1 = new Graph.Edge("e1", "n1", "n2");
-        Graph.Edge e2 = new Graph.Edge("e2", "n1", "n3");
+        Graph.Edge<String, String> e1 = new Graph.Edge<>("e1", "n1", "n2");
+        Graph.Edge<String, String> e2 = new Graph.Edge<>("e2", "n1", "n3");
 
         assertEquals(2, outgoingEdges.size());
 
@@ -275,47 +275,47 @@ public class GraphTest {
 
     @Test (expected = NullPointerException.class)
     public void testEdgeConstructorWithNull() {
-        new Graph.Edge(null, null, null);
+        new Graph.Edge<>(null, null, null);
     }
 
     @Test
     public void testEdgeGetLabel() {
-        Graph.Edge edge = new Graph.Edge("e1", "n1", "n2");
+        Graph.Edge<String, String> edge = new Graph.Edge<>("e1", "n1", "n2");
         assertEquals("e1", edge.getLabel());
     }
 
     @Test
     public void testEdgeGetSrc() {
-        Graph.Edge edge = new Graph.Edge("e1", "n1", "n2");
+        Graph.Edge<String, String> edge = new Graph.Edge<>("e1", "n1", "n2");
         assertEquals("n1", edge.getSrc());
     }
 
     @Test
     public void testEdgeGetDst() {
-        Graph.Edge edge = new Graph.Edge("e1", "n1", "n2");
+        Graph.Edge<String, String> edge = new Graph.Edge<>("e1", "n1", "n2");
         assertEquals("n2", edge.getDst());
     }
 
     @Test
     public void testEdgeHashCodeWithEqualEdges() {
-        Graph.Edge edge1 = new Graph.Edge("e1", "n1", "n2");
-        Graph.Edge edge2 = new Graph.Edge("e1", "n1", "n2");
+        Graph.Edge<String, String> edge1 = new Graph.Edge<>("e1", "n1", "n2");
+        Graph.Edge<String, String> edge2 = new Graph.Edge<>("e1", "n1", "n2");
 
         assertEquals(edge1.hashCode(), edge2.hashCode());
     }
 
     @Test
     public void testEdgeEqualsWithEqualEdges() {
-        Graph.Edge edge1 = new Graph.Edge("e1", "n1", "n2");
-        Graph.Edge edge2 = new Graph.Edge("e1", "n1", "n2");
+        Graph.Edge<String, String> edge1 = new Graph.Edge<>("e1", "n1", "n2");
+        Graph.Edge<String, String> edge2 = new Graph.Edge<>("e1", "n1", "n2");
 
         assertEquals(edge1, edge2);
     }
 
     @Test
     public void testEdgeEqualsWithUnequalEdges() {
-        Graph.Edge edge1 = new Graph.Edge("e1", "n1", "n2");
-        Graph.Edge edge2 = new Graph.Edge("e2", "n3", "n4");
+        Graph.Edge<String, String> edge1 = new Graph.Edge<>("e1", "n1", "n2");
+        Graph.Edge<String, String> edge2 = new Graph.Edge<>("e2", "n3", "n4");
 
         assertNotEquals(edge1, edge2);
     }

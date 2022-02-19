@@ -29,7 +29,7 @@ public class GraphTestDriver {
     /**
      * String -> Graph: maps the names of graphs to the actual graph
      **/
-    private final Map<String, Graph> graphs = new HashMap<String, Graph>();
+    private final Map<String, Graph<String, String>> graphs = new HashMap<>();
     private final PrintWriter output;
     private final BufferedReader input;
 
@@ -114,7 +114,7 @@ public class GraphTestDriver {
     }
 
     private void createGraph(String graphName) {
-        graphs.put(graphName, new Graph());
+        graphs.put(graphName, new Graph<>());
 
         output.println("created graph " + graphName);
     }
@@ -131,7 +131,7 @@ public class GraphTestDriver {
     }
 
     private void addNode(String graphName, String nodeName) {
-         Graph graph = graphs.get(graphName);
+         Graph<String, String> graph = graphs.get(graphName);
 
          graph.addNode(nodeName);
 
@@ -153,7 +153,7 @@ public class GraphTestDriver {
 
     private void addEdge(String graphName, String parentName, String childName,
                          String edgeLabel) {
-        Graph graph = graphs.get(graphName);
+        Graph<String, String> graph = graphs.get(graphName);
 
         graph.addEdge(edgeLabel, parentName, childName);
 
@@ -170,7 +170,7 @@ public class GraphTestDriver {
     }
 
     private void listNodes(String graphName) {
-        Graph graph = graphs.get(graphName);
+        Graph<String, String> graph = graphs.get(graphName);
 
         List<String> nodes = new ArrayList<>();
 
@@ -200,13 +200,13 @@ public class GraphTestDriver {
     }
 
     private void listChildren(String graphName, String parentName) {
-        Graph graph = graphs.get(graphName);
+        Graph<String, String> graph = graphs.get(graphName);
 
-        List<Graph.Edge> edges = graph.getOutgoingEdges(parentName);
+        List<Graph.Edge<String, String>> edges = graph.getOutgoingEdges(parentName);
 
-        Collections.sort(edges, new Comparator<Graph.Edge>() {
+        Collections.sort(edges, new Comparator<>() {
             @Override
-            public int compare(Graph.Edge e1, Graph.Edge e2) {
+            public int compare(Graph.Edge<String, String> e1, Graph.Edge<String, String> e2) {
                 int dstComparison = e1.getDst().compareTo(e2.getDst());
 
                 if (dstComparison != 0) {
@@ -219,7 +219,7 @@ public class GraphTestDriver {
 
         output.print("the children of " + parentName + " in " + graphName + " are:");
 
-        for (Graph.Edge edge : edges) {
+        for (Graph.Edge<String, String> edge : edges) {
             output.print(" " + edge.getDst() + "(" + edge.getLabel() + ")");
         }
 
