@@ -17,10 +17,10 @@ import java.util.*;
  * but no more than one edge between a source and destination node pair can have the same label.
  * All nodes in Graph are unique.
  */
-public class Graph implements Iterable<String> {
+public class Graph<N, P> implements Iterable<N> {
     public static final boolean DEBUG = false;
 
-    private Map<String, Set<Edge>> graph;
+    private Map<N, Set<Edge<N, P>>> graph;
 
     // Abstraction Function:
     // A map of key/value pairs where keys are the nodes in the graph
@@ -42,14 +42,14 @@ public class Graph implements Iterable<String> {
         assert graph != null;
 
         if (DEBUG) {
-            for (String node : graph.keySet()) {
+            for (N node : graph.keySet()) {
                 assert node != null;
 
-                Set<Edge> outgoingEdges = graph.get(node);
+                Set<Edge<N, P>> outgoingEdges = graph.get(node);
 
                 assert outgoingEdges != null;
 
-                for (Edge edge : outgoingEdges) {
+                for (Edge<N, P> edge : outgoingEdges) {
                     assert edge != null;
                 }
             }
@@ -73,7 +73,7 @@ public class Graph implements Iterable<String> {
      * @spec.modifies this
      * @spec.effects this_post = [nodeData]:G
      */
-    public boolean addNode(String nodeData) {
+    public boolean addNode(N nodeData) {
         checkRep();
 
         if (nodeData == null || graph.containsKey(nodeData)) {
@@ -100,7 +100,7 @@ public class Graph implements Iterable<String> {
      * @spec.modifies this
      * @spec.effects If this = [[src], [dst]], then this_post = [[src - dst (label)], [dst]]
      */
-    public boolean addEdge(String label, String src, String dst) {
+    public boolean addEdge(P label, N src, N dst) {
         checkRep();
 
         if (label == null || src == null || dst == null ||
@@ -109,7 +109,7 @@ public class Graph implements Iterable<String> {
             return false;
         }
 
-        boolean result = graph.get(src).add(new Edge(label, src, dst));
+        boolean result = graph.get(src).add(new Edge<>(label, src, dst));
 
         checkRep();
 
@@ -123,18 +123,18 @@ public class Graph implements Iterable<String> {
      * @return all nodes ni such that parent - ni (Li) where i is arbitrary
      * @throws NullPointerException if parent == null
      */
-    public List<String> getChildren(String parent) {
+    public List<N> getChildren(N parent) {
         checkRep();
 
         if (parent == null) {
             throw new NullPointerException();
         }
 
-        List<String> children = new ArrayList<>();
+        List<N> children = new ArrayList<>();
 
         // Inv: children contains all destination nodes of
         // outgoing edges of parent from 0 to i-1
-        for (Edge edge : graph.get(parent)) {
+        for (Edge<N, P> edge : graph.get(parent)) {
             children.add(edge.getDst());
         }
 
@@ -150,21 +150,21 @@ public class Graph implements Iterable<String> {
      * @return all nodes ni such that ni - child (Li) where i is arbitrary
      * @throws NullPointerException if child == null
      */
-    public List<String> getParents(String child) {
+    public List<N> getParents(N child) {
         checkRep();
 
         if (child == null) {
             throw new NullPointerException();
         }
 
-        List<String> parents = new ArrayList<>();
+        List<N> parents = new ArrayList<>();
 
         // Inv: parents contains all source nodes of outgoing
         // edges of nodes from 0 to i-1 where edge.getDst() == child
-        for (String node : graph.keySet()) {
+        for (N node : graph.keySet()) {
             // Inv: parents contains all source nodes of edges from
             // 0 to j-1 where edge.getDst() == child
-            for (Edge edge : graph.get(node)) {
+            for (Edge<N, P> edge : graph.get(node)) {
                 if (edge.getDst().equals(child)) {
                     parents.add(edge.getSrc());
                 }
@@ -183,20 +183,20 @@ public class Graph implements Iterable<String> {
      * @return all edges ni - nj (label) where i,j are arbitrary
      * @throws NullPointerException if label == null
      */
-    public List<Edge> getEdgesByLabel(String label) {
+    public List<Edge<N, P>> getEdgesByLabel(N label) { // Is it necessary to specify Edge types since class did?
         checkRep();
 
         if (label == null) {
             throw new NullPointerException();
         }
 
-        List<Edge> edges = new ArrayList<>();
+        List<Edge<N, P>> edges = new ArrayList<>();
 
         // Inv: edges contains outgoing edges of all nodes from
         // 0 to i-1 where edge.getLabel() == label
-        for (String node : graph.keySet()) {
+        for (N node : graph.keySet()) {
             // Inv: edges contains all edges from 0 to j-1 where edge.getLabel() == label
-            for (Edge edge : graph.get(node)) {
+            for (Edge<N, P> edge : graph.get(node)) {
                 if (edge.getLabel().equals(label)) {
                     edges.add(edge);
                 }
@@ -215,20 +215,20 @@ public class Graph implements Iterable<String> {
      * @return all edges ni - nodeData (Li) where i is arbitrary
      * @throws NullPointerException if nodeData == null
      */
-    public List<Edge> getIncomingEdges(String nodeData) {
+    public List<Edge<N, P>> getIncomingEdges(N nodeData) {
         checkRep();
 
         if (nodeData == null) {
             throw new NullPointerException();
         }
 
-        List<Edge> edges = new ArrayList<>();
+        List<Edge<N, P>> edges = new ArrayList<>();
 
         // Inv: edges contains outgoing edges of all nodes from
         // 0 to i-1 where edge.getDst() == nodeData
-        for (String node : graph.keySet()) {
+        for (N node : graph.keySet()) {
             // Inv: edges contains all edges from 0 to j-1 where edge.getDst() == nodeData
-            for (Edge edge : graph.get(node)) {
+            for (Edge<N, P> edge : graph.get(node)) {
                 if (edge.getDst().equals(nodeData)) {
                     edges.add(edge);
                 }
@@ -247,14 +247,14 @@ public class Graph implements Iterable<String> {
      * @return all edges nodeData - ni (Li) where i is arbitrary
      * @throws NullPointerException if nodeData == null
      */
-    public List<Edge> getOutgoingEdges(String nodeData) {
+    public List<Edge<N, P>> getOutgoingEdges(N nodeData) {
         checkRep();
 
         if (nodeData == null) {
             throw new NullPointerException();
         }
 
-        List<Edge> edges = new ArrayList<>();
+        List<Edge<N, P>> edges = new ArrayList<>();
 
         if (graph.containsKey(nodeData)) {
             edges.addAll(graph.get(nodeData));
@@ -272,7 +272,7 @@ public class Graph implements Iterable<String> {
      * @return true if and only if nodeData is present in this
      * @throws NullPointerException if nodeData == null
      */
-    public boolean containsNode(String nodeData) {
+    public boolean containsNode(N nodeData) {
         checkRep();
 
         if (nodeData == null) {
@@ -295,18 +295,18 @@ public class Graph implements Iterable<String> {
      * @return true if and only if src - dst (label) is an edge in this
      * @throws NullPointerException if label == null || src == null || dst == null
      */
-    public boolean containsEdge(String label, String src, String dst) {
+    public boolean containsEdge(P label, N src, N dst) {
         checkRep();
 
         if (label == null || src == null || dst == null) {
             throw new NullPointerException();
         }
 
-        Edge edgeToCheck = new Edge(label, src, dst);
+        Edge<N, P> edgeToCheck = new Edge<>(label, src, dst);
 
         // Inv: All nodes from 0 to i-1 don't contain
         // edgeToCheck as one of their outgoing edges
-        for (String node : graph.keySet()) {
+        for (N node : graph.keySet()) {
             if (graph.get(node).contains(edgeToCheck)) {
                 checkRep();
                 return true;
@@ -325,12 +325,12 @@ public class Graph implements Iterable<String> {
      * the graph in no particular order
      */
     @Override
-    public Iterator<String> iterator() {
+    public Iterator<N> iterator() {
         checkRep();
 
-        Set<String> copy = Collections.unmodifiableSet(graph.keySet());
+        Set<N> copy = Collections.unmodifiableSet(graph.keySet());
 
-        Iterator<String> nodeIterator = copy.iterator();
+        Iterator<N> nodeIterator = copy.iterator();
 
         checkRep();
 
@@ -342,10 +342,10 @@ public class Graph implements Iterable<String> {
      *
      * Each Edge can be described by src - dst (L), where src points to dst and L is the label
      */
-    public static class Edge {
-        private final String label;
-        private final String src;
-        private final String dst;
+    public static class Edge<N, P> {
+        private final P label;
+        private final N src;
+        private final N dst;
 
         // Abstraction Function:
         // label is the weight of the edge,
@@ -371,7 +371,7 @@ public class Graph implements Iterable<String> {
          * @throws NullPointerException if label == null || src == null || dst == null
          * @spec.effects Constructs a new Edge, src - dst (label)
          */
-        public Edge(String label, String src, String dst) {
+        public Edge(P label, N src, N dst) {
             if (label == null || src == null || dst == null) {
                 throw new NullPointerException();
             }
@@ -388,7 +388,7 @@ public class Graph implements Iterable<String> {
          *
          * @return if this = src - dst (L), then returns L
          */
-        public String getLabel() {
+        public P getLabel() {
             checkRep();
 
             return label;
@@ -399,7 +399,7 @@ public class Graph implements Iterable<String> {
          *
          * @return if this = src - dst (L), then returns src
          */
-        public String getSrc() {
+        public N getSrc() {
             checkRep();
 
             return src;
@@ -410,7 +410,7 @@ public class Graph implements Iterable<String> {
          *
          * @return if this = src - dst (L), then returns dst
          */
-        public String getDst() {
+        public N getDst() {
             checkRep();
 
             return dst;
@@ -445,12 +445,12 @@ public class Graph implements Iterable<String> {
         public boolean equals(Object obj) {
             checkRep();
 
-            if (!(obj instanceof Edge)) {
+            if (!(obj instanceof Edge<?, ?>)) { // Should these have ? for here? When to use?
                 checkRep();
                 return false;
             }
 
-            Edge edge = (Edge) obj;
+            Edge<N, P> edge = (Edge<N, P>) obj;
 
             boolean result = this.label.equals(edge.label) &&
                              this.src.equals(edge.src) && this.dst.equals(edge.dst);
