@@ -31,7 +31,7 @@ public class MarvelTestDriver {
     /**
      * String -> Graph: maps the names of graphs to the actual graph
      **/
-    private final Map<String, Graph> graphs = new HashMap<>();
+    private final Map<String, Graph<String, String>> graphs = new HashMap<>();
     private final PrintWriter output;
     private final BufferedReader input;
 
@@ -122,7 +122,7 @@ public class MarvelTestDriver {
     }
 
     private void createGraph(String graphName) {
-        graphs.put(graphName, new Graph());
+        graphs.put(graphName, new Graph<>());
 
         output.println("created graph " + graphName);
     }
@@ -139,7 +139,7 @@ public class MarvelTestDriver {
     }
 
     private void addNode(String graphName, String nodeName) {
-        Graph graph = graphs.get(graphName);
+        Graph<String, String> graph = graphs.get(graphName);
 
         graph.addNode(nodeName);
 
@@ -161,7 +161,7 @@ public class MarvelTestDriver {
 
     private void addEdge(String graphName, String parentName, String childName,
                          String edgeLabel) {
-        Graph graph = graphs.get(graphName);
+        Graph<String, String> graph = graphs.get(graphName);
 
         graph.addEdge(edgeLabel, parentName, childName);
 
@@ -178,7 +178,7 @@ public class MarvelTestDriver {
     }
 
     private void listNodes(String graphName) {
-        Graph graph = graphs.get(graphName);
+        Graph<String, String> graph = graphs.get(graphName);
 
         List<String> nodes = new ArrayList<>();
 
@@ -208,13 +208,13 @@ public class MarvelTestDriver {
     }
 
     private void listChildren(String graphName, String parentName) {
-        Graph graph = graphs.get(graphName);
+        Graph<String, String> graph = graphs.get(graphName);
 
-        List<Graph.Edge> edges = graph.getOutgoingEdges(parentName);
+        List<Graph.Edge<String, String>> edges = graph.getOutgoingEdges(parentName);
 
         Collections.sort(edges, new Comparator<>() {
             @Override
-            public int compare(Graph.Edge e1, Graph.Edge e2) {
+            public int compare(Graph.Edge<String, String> e1, Graph.Edge<String, String> e2) {
                 int dstComparison = e1.getDst().compareTo(e2.getDst());
 
                 if (dstComparison != 0) {
@@ -227,7 +227,7 @@ public class MarvelTestDriver {
 
         output.print("the children of " + parentName + " in " + graphName + " are:");
 
-        for (Graph.Edge edge : edges) {
+        for (Graph.Edge<String, String> edge : edges) {
             output.print(" " + edge.getDst() + "(" + edge.getLabel() + ")");
         }
 
@@ -264,7 +264,7 @@ public class MarvelTestDriver {
     }
 
     private void findPath(String graphName, String src, String dst) {
-        Graph graph = graphs.get(graphName);
+        Graph<String, String> graph = graphs.get(graphName);
 
         if (!graph.containsNode(src) || !graph.containsNode(dst)) {
             if (!graph.containsNode(src)) {
@@ -281,12 +281,12 @@ public class MarvelTestDriver {
         output.println("path from " + src + " to " + dst + ":");
 
         if (!src.equals(dst)) {
-            List<Graph.Edge> path = MarvelPaths.findPath(graph, src, dst);
+            List<Graph.Edge<String, String>> path = MarvelPaths.findPath(graph, src, dst);
 
             if (path == null) {
                 output.println("no path found");
             } else {
-                for (Graph.Edge edge : path) {
+                for (Graph.Edge<String, String> edge : path) {
                     output.println(edge.getSrc() + " to " + edge.getDst() + " via " + edge.getLabel());
                 }
             }
