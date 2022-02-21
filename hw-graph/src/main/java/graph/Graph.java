@@ -442,7 +442,6 @@ public class Graph<N, P> implements Iterable<N> {
          * the same edge
          */
         @Override
-        @SuppressWarnings("unchecked") // +=+ Should we add this cause gradle didn't build w/o?
         public boolean equals(Object obj) {
             checkRep();
 
@@ -451,7 +450,7 @@ public class Graph<N, P> implements Iterable<N> {
                 return false;
             }
 
-            Edge<N, P> edge = (Edge<N, P>) obj;
+            Edge<?, ?> edge = (Edge<?, ?>) obj; // +=+ This vs suppress warnings? Does double ? for N,P work?
 
             boolean result = this.label.equals(edge.label) &&
                              this.src.equals(edge.src) && this.dst.equals(edge.dst);

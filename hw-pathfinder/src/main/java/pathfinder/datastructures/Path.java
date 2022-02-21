@@ -169,7 +169,6 @@ public class Path<E> implements Iterable<Path<E>.Segment> {
      * @return {@literal true} if and only if {@code obj} is equal to {@code this}.
      */
     @Override
-    @SuppressWarnings("unchecked")
     public boolean equals(Object obj) {
         if(this == obj) {
             return true;
@@ -177,7 +176,7 @@ public class Path<E> implements Iterable<Path<E>.Segment> {
         if(!(obj instanceof Path<?>)) {
             return false;
         }
-        Path<E> other = (Path<E>) obj;
+        Path<?> other = (Path<?>) obj;
         if(this.path.size() != other.path.size()) {
             return false;
         }
@@ -300,7 +299,6 @@ public class Path<E> implements Iterable<Path<E>.Segment> {
         }
 
         @Override
-        @SuppressWarnings("unchecked")
         public boolean equals(Object obj) {
             if(this == obj) {
                 return true;
@@ -308,7 +306,7 @@ public class Path<E> implements Iterable<Path<E>.Segment> {
             if(!(obj instanceof Path<?>.Segment)) { // +=+ Would we need to reference Path?
                 return false;
             }
-            Segment other = (Segment) obj;
+            Path<?>.Segment other = (Path<?>.Segment) obj;
             return other.getStart().equals(this.getStart())
                    && other.getEnd().equals(this.getEnd())
                    && (Double.compare(this.cost, other.cost) == 0);
