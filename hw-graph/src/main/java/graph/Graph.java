@@ -3,7 +3,8 @@ package graph;
 import java.util.*;
 
 /**
- * Graph is a mutable finite set of nodes connected by directed edges with labels.
+ * Graph is a generic mutable finite set of immutable nodes connected by directed edges with immutable
+ * labels. Behavior of Graph is unspecified when either node or edge label types are mutable.
  *
  * Each Graph can be described by
  * [[n1 - n1_a (L1_a), n1_b (L1_b), ...], [n2 - n2_a (L2_a), n2_b (L2_b), ...], ...],
@@ -16,11 +17,14 @@ import java.util.*;
  * Nodes in Graph can only have edges between other existing nodes. Labels of edges are not unique,
  * but no more than one edge between a source and destination node pair can have the same label.
  * All nodes in Graph are unique.
+ *
+ * @param <N> the type of nodes
+ * @param <E> the type of edge labels
  */
-public class Graph<N, P> implements Iterable<N> {
+public class Graph<N, E> implements Iterable<N> {
     public static final boolean DEBUG = false;
 
-    private Map<N, Set<Edge<N, P>>> graph;
+    private Map<N, Set<Edge<N, E>>> graph;
 
     // Abstraction Function:
     // A map of key/value pairs where keys are the nodes in the graph
@@ -45,11 +49,11 @@ public class Graph<N, P> implements Iterable<N> {
             for (N node : graph.keySet()) {
                 assert node != null;
 
-                Set<Edge<N, P>> outgoingEdges = graph.get(node);
+                Set<Edge<N, E>> outgoingEdges = graph.get(node);
 
                 assert outgoingEdges != null;
 
-                for (Edge<N, P> edge : outgoingEdges) {
+                for (Edge<N, E> edge : outgoingEdges) {
                     assert edge != null;
                 }
             }
@@ -100,7 +104,7 @@ public class Graph<N, P> implements Iterable<N> {
      * @spec.modifies this
      * @spec.effects If this = [[src], [dst]], then this_post = [[src - dst (label)], [dst]]
      */
-    public boolean addEdge(P label, N src, N dst) {
+    public boolean addEdge(E label, N src, N dst) {
         checkRep();
 
         if (label == null || src == null || dst == null ||
@@ -134,7 +138,7 @@ public class Graph<N, P> implements Iterable<N> {
 
         // Inv: children contains all destination nodes of
         // outgoing edges of parent from 0 to i-1
-        for (Edge<N, P> edge : graph.get(parent)) {
+        for (Edge<N, E> edge : graph.get(parent)) {
             children.add(edge.getDst());
         }
 
@@ -164,7 +168,7 @@ public class Graph<N, P> implements Iterable<N> {
         for (N node : graph.keySet()) {
             // Inv: parents contains all source nodes of edges from
             // 0 to j-1 where edge.getDst() == child
-            for (Edge<N, P> edge : graph.get(node)) {
+            for (Edge<N, E> edge : graph.get(node)) {
                 if (edge.getDst().equals(child)) {
                     parents.add(edge.getSrc());
                 }
@@ -183,20 +187,20 @@ public class Graph<N, P> implements Iterable<N> {
      * @return all edges ni - nj (label) where i,j are arbitrary
      * @throws NullPointerException if label == null
      */
-    public List<Edge<N, P>> getEdgesByLabel(N label) { // +=+ Is it necessary to specify Edge types since class did?
+    public List<Edge<N, E>> getEdgesByLabel(N label) { // +=+ Is it necessary to specify Edge types since class did?
         checkRep();
 
         if (label == null) {
             throw new NullPointerException();
         }
 
-        List<Edge<N, P>> edges = new ArrayList<>();
+        List<Edge<N, E>> edges = new ArrayList<>();
 
         // Inv: edges contains outgoing edges of all nodes from
         // 0 to i-1 where edge.getLabel() == label
         for (N node : graph.keySet()) {
             // Inv: edges contains all edges from 0 to j-1 where edge.getLabel() == label
-            for (Edge<N, P> edge : graph.get(node)) { // +=+ Also are these necessary types? Works w/o
+            for (Edge<N, E> edge : graph.get(node)) { // +=+ Also are these necessary types? Works w/o
                 if (edge.getLabel().equals(label)) {
                     edges.add(edge);
                 }
@@ -215,20 +219,20 @@ public class Graph<N, P> implements Iterable<N> {
      * @return all edges ni - nodeData (Li) where i is arbitrary
      * @throws NullPointerException if nodeData == null
      */
-    public List<Edge<N, P>> getIncomingEdges(N nodeData) {
+    public List<Edge<N, E>> getIncomingEdges(N nodeData) {
         checkRep();
 
         if (nodeData == null) {
             throw new NullPointerException();
         }
 
-        List<Edge<N, P>> edges = new ArrayList<>();
+        List<Edge<N, E>> edges = new ArrayList<>();
 
         // Inv: edges contains outgoing edges of all nodes from
         // 0 to i-1 where edge.getDst() == nodeData
         for (N node : graph.keySet()) {
             // Inv: edges contains all edges from 0 to j-1 where edge.getDst() == nodeData
-            for (Edge<N, P> edge : graph.get(node)) {
+            for (Edge<N, E> edge : graph.get(node)) {
                 if (edge.getDst().equals(nodeData)) {
                     edges.add(edge);
                 }
@@ -247,14 +251,14 @@ public class Graph<N, P> implements Iterable<N> {
      * @return all edges nodeData - ni (Li) where i is arbitrary
      * @throws NullPointerException if nodeData == null
      */
-    public List<Edge<N, P>> getOutgoingEdges(N nodeData) {
+    public List<Edge<N, E>> getOutgoingEdges(N nodeData) {
         checkRep();
 
         if (nodeData == null) {
             throw new NullPointerException();
         }
 
-        List<Edge<N, P>> edges = new ArrayList<>();
+        List<Edge<N, E>> edges = new ArrayList<>();
 
         if (graph.containsKey(nodeData)) {
             edges.addAll(graph.get(nodeData));
@@ -295,14 +299,14 @@ public class Graph<N, P> implements Iterable<N> {
      * @return true if and only if src - dst (label) is an edge in this
      * @throws NullPointerException if label == null || src == null || dst == null
      */
-    public boolean containsEdge(P label, N src, N dst) {
+    public boolean containsEdge(E label, N src, N dst) {
         checkRep();
 
         if (label == null || src == null || dst == null) {
             throw new NullPointerException();
         }
 
-        Edge<N, P> edgeToCheck = new Edge<>(label, src, dst);
+        Edge<N, E> edgeToCheck = new Edge<>(label, src, dst);
 
         // Inv: All nodes from 0 to i-1 don't contain
         // edgeToCheck as one of their outgoing edges
@@ -338,12 +342,17 @@ public class Graph<N, P> implements Iterable<N> {
     }
 
     /**
-     * Edge is an immutable connection between two nodes with direction and a label
+     * Edge is a generic immutable connection between two immutable nodes with direction and
+     * an immutable label. Behavior of Edge is unspecified when either node or edge label
+     * types are mutable.
      *
      * Each Edge can be described by src - dst (L), where src points to dst and L is the label
+     *
+     * @param <N> the type of nodes
+     * @param <E> the type of edge labels
      */
-    public static class Edge<N, P> {
-        private final P label;
+    public static class Edge<N, E> {
+        private final E label;
         private final N src;
         private final N dst;
 
@@ -371,7 +380,7 @@ public class Graph<N, P> implements Iterable<N> {
          * @throws NullPointerException if label == null || src == null || dst == null
          * @spec.effects Constructs a new Edge, src - dst (label)
          */
-        public Edge(P label, N src, N dst) {
+        public Edge(E label, N src, N dst) {
             if (label == null || src == null || dst == null) {
                 throw new NullPointerException();
             }
@@ -388,7 +397,7 @@ public class Graph<N, P> implements Iterable<N> {
          *
          * @return if this = src - dst (L), then returns L
          */
-        public P getLabel() {
+        public E getLabel() {
             checkRep();
 
             return label;
