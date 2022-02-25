@@ -20,6 +20,7 @@ public class PathFinderPaths {
      * @param dst the destination node to end the path
      * @param <N> the type of nodes
      * @return the least-cost path from src to dst
+     * @spec.requires no negative edges in graph
      */
     public static <N> Path<N> findPath(Graph<N, Double> graph, N src, N dst) {
         // Uses Dijkstra's shortest path algorithm

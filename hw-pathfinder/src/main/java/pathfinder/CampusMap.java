@@ -24,7 +24,8 @@ import java.util.Map;
 
 /**
  * CampusMap is an immutable model of buildings around UW campus.
- * Buildings in CampusMap have unique short names.
+ * Buildings in CampusMap have unique short names and distances
+ * between locations are non-negative.
  */
 public class CampusMap implements ModelAPI {
     public static final boolean DEBUG = false;
@@ -44,6 +45,7 @@ public class CampusMap implements ModelAPI {
     // campusBuildings != null &&
     // campusMap doesn't contain null points
     // campusMap doesn't contain null distances
+    // campusMap doesn't contain negative distances
     // campusBuildings doesn't contain null short names
     // campusBuildings doesn't contain null campus buildings
     // campusBuildings doesn't contain duplicate short names
@@ -58,6 +60,10 @@ public class CampusMap implements ModelAPI {
         if (DEBUG) {
             for (Point point : campusMap) {
                 assert point != null;
+
+                for (Graph.Edge<Point, Double> edge : campusMap.getOutgoingEdges(point)) {
+                    assert edge.getLabel() >= 0;
+                }
             }
 
             for (String shortName : campusBuildings.keySet()) {
