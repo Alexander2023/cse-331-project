@@ -187,7 +187,7 @@ public class Graph<N, E> implements Iterable<N> {
      * @return all edges ni - nj (label) where i,j are arbitrary
      * @throws NullPointerException if label == null
      */
-    public List<Edge<N, E>> getEdgesByLabel(N label) { // +=+ Is it necessary to specify Edge types since class did?
+    public List<Edge<N, E>> getEdgesByLabel(N label) {
         checkRep();
 
         if (label == null) {
@@ -200,7 +200,7 @@ public class Graph<N, E> implements Iterable<N> {
         // 0 to i-1 where edge.getLabel() == label
         for (N node : graph.keySet()) {
             // Inv: edges contains all edges from 0 to j-1 where edge.getLabel() == label
-            for (Edge<N, E> edge : graph.get(node)) { // +=+ Also are these necessary types? Works w/o
+            for (Edge<N, E> edge : graph.get(node)) {
                 if (edge.getLabel().equals(label)) {
                     edges.add(edge);
                 }
@@ -454,12 +454,12 @@ public class Graph<N, E> implements Iterable<N> {
         public boolean equals(Object obj) {
             checkRep();
 
-            if (!(obj instanceof Edge<?, ?>)) { // +=+ Should these have ? for here? When to use?
+            if (!(obj instanceof Edge<?, ?>)) {
                 checkRep();
                 return false;
             }
 
-            Edge<?, ?> edge = (Edge<?, ?>) obj; // +=+ This vs suppress warnings? Does double ? for N,P work?
+            Edge<?, ?> edge = (Edge<?, ?>) obj;
 
             boolean result = this.label.equals(edge.label) &&
                              this.src.equals(edge.src) && this.dst.equals(edge.dst);

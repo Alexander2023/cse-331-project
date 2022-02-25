@@ -53,7 +53,7 @@ public class Path<N> implements Iterable<Path<N>.Segment> {
     /**
      * The ordered sequence of segments representing a path between nodes.
      */
-    private List<Segment> path; // +=+ Should Segment be converted to Path<N>.Segment w/in same class?
+    private List<Segment> path;
 
     /**
      * Creates a new, empty path containing a start node. Essentially this represents a path
@@ -215,7 +215,7 @@ public class Path<N> implements Iterable<Path<N>.Segment> {
     /**
      * Segment represents a single segment as part of a longer, more complex path between nodes.
      * Segments are immutable parts of a larger path that cannot be instantiated directly, and
-     * are created as part of larger paths by calling Path#extend(E, double).
+     * are created as part of larger paths by calling Path#extend(N, double).
      */
     public class Segment {
 
@@ -270,7 +270,7 @@ public class Path<N> implements Iterable<Path<N>.Segment> {
          * @return The beginning node of this segment.
          */
         public N getStart() {
-            // Note: Since type E is immutable, this isn't rep exposure.
+            // Note: Since type N is immutable, this isn't rep exposure.
             return this.start;
         }
 
@@ -306,8 +306,8 @@ public class Path<N> implements Iterable<Path<N>.Segment> {
             if(this == obj) {
                 return true;
             }
-            if(!(obj instanceof Path<?>.Segment)) { // +=+ Would we need to reference Path?
-                return false; // +=+ Is this preferred over static inner class which uses generics?
+            if(!(obj instanceof Path<?>.Segment)) {
+                return false;
             }
             Path<?>.Segment other = (Path<?>.Segment) obj;
             return other.getStart().equals(this.getStart())
