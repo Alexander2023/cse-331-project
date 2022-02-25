@@ -1,0 +1,15 @@
+# Tests that path finding applies Dijkstra's algorithm properly when
+# encountering multiple edges of different costs between pairs of nodes
+
+CreateGraph g
+
+AddNode g p1
+AddNode g p2
+AddNode g p3
+
+AddEdge g p1 p2 1.0
+AddEdge g p1 p2 2.0
+AddEdge g p2 p3 1.0
+AddEdge g p2 p3 2.0
+
+FindPath g p1 p3

@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * CampusMap is an immutable model of buildings around campus.
+ * CampusMap is an immutable model of buildings around UW campus.
  * Buildings in CampusMap have unique short names.
  */
 public class CampusMap implements ModelAPI {
@@ -69,7 +69,7 @@ public class CampusMap implements ModelAPI {
     }
 
     /**
-     * @spec.effects Constructs a new CampusMap, []
+     * @spec.effects Constructs a new CampusMap
      */
     public CampusMap() {
         campusMap = new Graph<>();
