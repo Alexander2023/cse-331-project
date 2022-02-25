@@ -1,0 +1,12 @@
+# Tests that a path is found when there is only one possible path
+
+CreateGraph g
+
+AddNode g p1
+AddNode g p2
+AddNode g p3
+
+AddEdge g p1 p2 1.0
+AddEdge g p2 p3 1.0
+
+FindPath g p1 p3

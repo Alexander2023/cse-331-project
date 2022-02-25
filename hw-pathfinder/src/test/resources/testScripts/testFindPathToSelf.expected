@@ -1,0 +1,8 @@
+# Tests that path finding works properly when asked to find the path from a node to itself
+
+created graph g
+
+added node p1 to g
+
+path from p1 to p1:
+total cost: 0.000

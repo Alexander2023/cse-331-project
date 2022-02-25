@@ -263,20 +263,18 @@ public class PathfinderTestDriver {
 
         output.println("path from " + src + " to " + dst + ":");
 
-        if (!src.equals(dst)) {
-            Path<String> path = PathFinderPaths.findPath(graph, src, dst);
+        Path<String> path = PathFinderPaths.findPath(graph, src, dst);
 
-            if (path == null) {
-                output.println("no path found");
-            } else {
-                for (Path<String>.Segment segment : path) {
-                    String fCost = String.format("%.3f", segment.getCost());
-                    output.println(segment.getStart() + " to " + segment.getEnd() +
-                                   " with weight " + fCost);
-                }
-                String fCost = String.format("%.3f", path.getCost());
-                output.println("total cost: " + fCost);
+        if (path == null) {
+            output.println("no path found");
+        } else {
+            for (Path<String>.Segment segment : path) {
+                String fCost = String.format("%.3f", segment.getCost());
+                output.println(segment.getStart() + " to " + segment.getEnd() +
+                               " with weight " + fCost);
             }
+            String fCost = String.format("%.3f", path.getCost());
+            output.println("total cost: " + fCost);
         }
     }
 

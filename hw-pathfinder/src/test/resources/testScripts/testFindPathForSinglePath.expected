@@ -1,0 +1,15 @@
+# Tests that a path is found when there is only one possible path
+
+created graph g
+
+added node p1 to g
+added node p2 to g
+added node p3 to g
+
+added edge 1.000 from p1 to p2 in g
+added edge 1.000 from p2 to p3 in g
+
+path from p1 to p3:
+p1 to p2 with weight 1.000
+p2 to p3 with weight 1.000
+total cost: 2.000

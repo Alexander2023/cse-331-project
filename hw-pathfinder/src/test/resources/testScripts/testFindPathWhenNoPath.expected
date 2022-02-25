@@ -1,0 +1,10 @@
+# Tests that path finding works properly when there is no path between existing nodes
+
+created graph g
+
+added node p1 to g
+
+added node p2 to g
+
+path from p1 to p2:
+no path found

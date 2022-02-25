@@ -1,0 +1,17 @@
+# Tests that path finding applies Dijkstra's algorithm properly
+# by finding the overall shortest path, even when the first segment
+# is more costly
+
+CreateGraph g
+
+AddNode g p1
+AddNode g p2
+AddNode g p3
+AddNode g p4
+
+AddEdge g p1 p2 1.0
+AddEdge g p2 p4 3.0
+AddEdge g p1 p3 2.0
+AddEdge g p3 p4 1.0
+
+FindPath g p1 p4

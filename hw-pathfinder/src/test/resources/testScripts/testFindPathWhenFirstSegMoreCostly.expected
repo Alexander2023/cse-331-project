@@ -1,0 +1,20 @@
+# Tests that path finding applies Dijkstra's algorithm properly
+# by finding the overall shortest path, even when the first segment
+# is more costly
+
+created graph g
+
+added node p1 to g
+added node p2 to g
+added node p3 to g
+added node p4 to g
+
+added edge 1.000 from p1 to p2 in g
+added edge 3.000 from p2 to p4 in g
+added edge 2.000 from p1 to p3 in g
+added edge 1.000 from p3 to p4 in g
+
+path from p1 to p4:
+p1 to p3 with weight 2.000
+p3 to p4 with weight 1.000
+total cost: 3.000

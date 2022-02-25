@@ -1,0 +1,16 @@
+# Tests that path finding applies Dijkstra's algorithm properly
+# by choosing the minimum-cost path of two paths
+
+created graph g
+
+added node p1 to g
+added node p2 to g
+added node p3 to g
+
+added edge 1.000 from p1 to p2 in g
+added edge 1.000 from p2 to p3 in g
+added edge 1.000 from p1 to p3 in g
+
+path from p1 to p3:
+p1 to p3 with weight 1.000
+total cost: 1.000
