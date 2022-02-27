@@ -12,9 +12,10 @@
 import React, {Component} from 'react';
 
 interface EdgeListProps {
-    onChange(edges: any): void;  // called when a new edge list is ready
-                                 // TODO: once you decide how you want to communicate the edges to the App, you should
-                                 // change the type of edges so it isn't `any`
+    onChange(text: string): void;  // called when a new edge list is ready
+    onDrawPressed(): void;
+    onClearPressed(): void;
+    value: string;
 }
 
 /**
@@ -29,11 +30,11 @@ class EdgeList extends Component<EdgeListProps> {
                 <textarea
                     rows={5}
                     cols={30}
-                    onChange={() => {console.log('textarea onChange was called');}}
-                    value={"I'm stuck..."}
+                    onChange={(e) => {this.props.onChange(e.target.value)}}
+                    value={this.props.value}
                 /> <br/>
-                <button onClick={() => {console.log('Draw onClick was called');}}>Draw</button>
-                <button onClick={() => {console.log('Clear onClick was called');}}>Clear</button>
+                <button onClick={() => {this.props.onDrawPressed()}}>Draw</button>
+                <button onClick={() => {this.props.onClearPressed()}}>Clear</button>
             </div>
         );
     }
