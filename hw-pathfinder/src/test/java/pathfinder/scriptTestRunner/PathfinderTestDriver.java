@@ -152,7 +152,7 @@ public class PathfinderTestDriver {
         String graphName = arguments.get(0);
         String parentName = arguments.get(1);
         String childName = arguments.get(2);
-        Double edgeLabel = Double.parseDouble(arguments.get(3)); // +=+ Would the exceptions thrown count as undefined behavior?
+        Double edgeLabel = Double.parseDouble(arguments.get(3));
 
         addEdge(graphName, parentName, childName, edgeLabel);
     }
