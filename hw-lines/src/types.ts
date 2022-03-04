@@ -1,8 +1,7 @@
 export interface Edge {
-    x1: number;
-    y1: number;
-    x2: number;
-    y2: number;
-    color: string;
-    key: number;
+    x1: number; // x coordinate of start point
+    y1: number; // y coordinate of start point
+    x2: number; // x coordinate of end point
+    y2: number; // y coordinate of end point
+    color: string; // color of edge
 }
