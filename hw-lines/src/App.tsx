@@ -16,64 +16,85 @@ import Map from "./Map";
 // Allows us to write CSS styles inside App.css, any styles will apply to all components inside <App />
 import "./App.css";
 import {Edge} from "./types";
+import {NUM_EDGE_PROPERTIES, UW_MAX_COORD, UW_MIN_COORD} from "./Constants";
 
 interface AppState {
-    text: string;
-    edges: Edge[];
+    edgeText: string; // unparsed user-defined edge input
+    edges: Edge[]; // parsed edges to draw on the map
 }
 
-const NUM_EDGE_FIELDS: number = 5; // +=+ Should constants be defined here?
-const MIN_COORD: number = 0;
-const MAX_COORD: number = 4000;
-
+/**
+ * Top-level application that lets the user input edges and display them on
+ * a map of the UW Seattle campus
+ */
 class App extends Component<{}, AppState> { // <- {} means no props.
   constructor(props: any) {
     super(props);
     this.state = {
-        text: "",
+        edgeText: "",
         edges: []
     };
   }
 
+  /**
+   * Updates text display with edge input changes by the user
+   */
   onHandleInputChange = (value: string) => {
-      this.setState({text: value});
+      this.setState({edgeText: value});
   }
 
+  /**
+   * Parses the edge input by the user to display on the map when prompted to draw
+   */
   onHandleDrawPressed = () => {
       const edges: Edge[] = [];
 
-      const lines: string[] = this.state.text.split("\n");
+      const lines: string[] = this.state.edgeText.split("\n");
 
       for (let line of lines) {
-          const properties: string[] = line.split(" "); // +=+ Should we support any number of spaces?
+          if (line.length == 0) {
+              continue; // Skips blank lines
+          }
 
-          if (properties.length !== NUM_EDGE_FIELDS) {
-              alert("Please enter each edge in the form: x1 y1 x2 y2 COLOR");
+          const properties: string[] = line.split(" ");
+
+          if (properties.length !== NUM_EDGE_PROPERTIES) {
+              // Clears map to inform user that invalid input was not drawn
+              this.setState({edges: []});
+              alert("Please enter each edge in the form: x1 y1 x2 y2 color");
               return;
           }
 
-          const x1: number = parseFloat(properties[0]); // +=+ How would we handle partial floats?
+          const x1: number = parseFloat(properties[0]);
           const y1: number = parseFloat(properties[1]);
           const x2: number = parseFloat(properties[2]);
           const y2: number = parseFloat(properties[3]);
           const color: string = properties[4];
 
-          const isInBounds = (val: number) => { // +=+ Is this ok style?
-              return val >= MIN_COORD && val <= MAX_COORD;
-          }
-
-          if (isNaN(x1) || isNaN(y1) || isNaN(x2) || isNaN(y2) ||
-              !isInBounds(x1) || !isInBounds(y1) || !isInBounds(x2) || !isInBounds(y2)) {
-              alert(`Please ensure x and y coordinates are floats between ${MIN_COORD} and ${MAX_COORD}`);
+          if (isNaN(x1) || isNaN(y1) || isNaN(x2) || isNaN(y2) || !this.isInBounds(x1) ||
+              !this.isInBounds(y1) || !this.isInBounds(x2) || !this.isInBounds(y2)) {
+              // Clears map to inform user that invalid input was not drawn
+              this.setState({edges: []});
+              alert(`Please ensure x and y coordinates are numbers between ${UW_MIN_COORD} and ${UW_MAX_COORD}`);
               return;
           }
 
-          edges.push({x1: x1, y1: y1, x2: x2, y2: y2, color: color, key: edges.length});
+          edges.push({x1: x1, y1: y1, x2: x2, y2: y2, color: color});
       }
 
       this.setState({edges});
   }
 
+  /**
+   * Checks whether a coordinate is within the bounds of the UW Seattle campus
+   */
+  isInBounds = (val: number) => {
+      return val >= UW_MIN_COORD && val <= UW_MAX_COORD;
+  }
+
+  /**
+   * Clears the map of edges when prompted to clear
+   */
   onHandleClearPressed = () => {
       this.setState({edges: []})
   }
@@ -89,7 +110,7 @@ class App extends Component<{}, AppState> { // <- {} means no props.
           onChange={this.onHandleInputChange}
           onDrawPressed={this.onHandleDrawPressed}
           onClearPressed={this.onHandleClearPressed}
-          value={this.state.text}
+          edgeText={this.state.edgeText}
         />
       </div>
     );

@@ -21,9 +21,12 @@ import {Edge} from "./types";
 const position: LatLngExpression = [UW_LATITUDE_CENTER, UW_LONGITUDE_CENTER];
 
 interface MapProps {
-  edges: Edge[];
+  edges: Edge[]; // edges to draw on the map
 }
 
+/**
+ * A component that will render a React Leaflet map with user-defined edges drawn on it
+ */
 class Map extends Component<MapProps> {
   render() {
     return (
@@ -37,11 +40,16 @@ class Map extends Component<MapProps> {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          {
-            this.props.edges.map((edge: Edge, index: number) => {
-                return <MapLine key={index} color={edge.color} x1={edge.x1} y1={edge.y1} x2={edge.x2} y2={edge.y2} />
-            })
-          }
+          {this.props.edges.map((edge: Edge, index: number) => {
+              return <MapLine
+                        key={index}
+                        color={edge.color}
+                        x1={edge.x1}
+                        y1={edge.y1}
+                        x2={edge.x2}
+                        y2={edge.y2}
+                     />
+          })}
         </MapContainer>
       </div>
     );

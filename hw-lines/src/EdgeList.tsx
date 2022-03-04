@@ -12,10 +12,10 @@
 import React, {Component} from 'react';
 
 interface EdgeListProps {
-    onChange(text: string): void;  // called when a new edge list is ready
-    onDrawPressed(): void;
-    onClearPressed(): void;
-    value: string;
+    edgeText: string; // edges in the text field
+    onChange(edgeText: string): void;  // called when a new edge list is ready
+    onDrawPressed(): void; // called when draw button is pressed
+    onClearPressed(): void; // called when clear button is pressed
 }
 
 /**
@@ -31,7 +31,7 @@ class EdgeList extends Component<EdgeListProps> {
                     rows={5}
                     cols={30}
                     onChange={(e) => {this.props.onChange(e.target.value)}}
-                    value={this.props.value}
+                    value={this.props.edgeText}
                 /> <br/>
                 <button onClick={() => {this.props.onDrawPressed()}}>Draw</button>
                 <button onClick={() => {this.props.onClearPressed()}}>Clear</button>
