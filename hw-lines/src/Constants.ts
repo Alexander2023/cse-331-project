@@ -32,3 +32,12 @@ export const UW_LATITUDE_CENTER = 47.65440627742146;
 
 // Map center
 export const UW_LONGITUDE_CENTER = -122.30476957834502;
+
+// Number of properties of an edge
+export const NUM_EDGE_PROPERTIES : number = 5;
+
+// Minimum coordinate of the UW Seattle campus
+export const UW_MIN_COORD : number = 0;
+
+// Maximum coordinate of the UW Seattle campus
+export const UW_MAX_COORD : number = 4000;
