@@ -17,6 +17,14 @@ and only exists for aesthetic purposes. The app would work just fine if this
 file was empty.
 */
 
+/* Centers component with ID "controls" and sets spacing in between */
+#controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
 /* Centers component with ID "map-wrapper" and sets width and bottom spacing */
 #map {
     margin-left: auto;
