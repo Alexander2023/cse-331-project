@@ -7,7 +7,7 @@ interface ControlsProps {
     pathEnd: string;
     onStartDropdownChange(option: string): void;
     onEndDropdownChange(option: string): void;
-    requestPath(): void;
+    onClearPressed(): void;
 }
 
 interface ControlsState {
@@ -26,7 +26,6 @@ class Controls extends Component<ControlsProps, ControlsState> {
     componentDidMount() {
         this.requestBuildings();
     }
-
 
     requestBuildings = async () => {
         try {
@@ -62,7 +61,7 @@ class Controls extends Component<ControlsProps, ControlsState> {
                     defaultOption={this.props.pathEnd}
                     onDropdownChange={this.props.onEndDropdownChange}
                 />
-                <button id="draw" onClick={() => {this.props.requestPath()}}>Directions</button>
+                <button onClick={() => {this.props.onClearPressed()}}>Clear</button>
             </div>
         );
     }

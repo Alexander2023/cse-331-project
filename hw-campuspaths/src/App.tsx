@@ -28,7 +28,7 @@ class App extends Component<{}, AppState> {
         super(props);
 
         this.state = {
-            pathStart: "CSE",
+            pathStart: "CS2",
             pathEnd: "CS2",
             path: []
         }
@@ -61,12 +61,20 @@ class App extends Component<{}, AppState> {
     onStartDropdownChange = (option: string) => {
         this.setState({
             pathStart: option
-        })
+        }, this.requestPath)
     }
 
     onEndDropdownChange = (option: string) => {
         this.setState({
             pathEnd: option
+        }, this.requestPath)
+    }
+
+    onClearPressed = () => {
+        this.setState({
+            pathStart: "CS2",
+            pathEnd: "CS2",
+            path: []
         })
     }
 
@@ -79,7 +87,7 @@ class App extends Component<{}, AppState> {
                     pathEnd={this.state.pathEnd}
                     onStartDropdownChange={this.onStartDropdownChange}
                     onEndDropdownChange={this.onEndDropdownChange}
-                    requestPath={this.requestPath}
+                    onClearPressed={this.onClearPressed}
                 />
             </div>
         );
