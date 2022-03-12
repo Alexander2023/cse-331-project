@@ -15,21 +15,12 @@ import React, {Component} from 'react';
 import "./App.css";
 import Map from "./Map";
 import Controls from "./Controls";
-
-interface Point {
-    x: number;
-    y: number;
-}
-
-interface Segment {
-    start: Point;
-    end: Point;
-}
+import {Edge} from "./types";
 
 interface AppState {
     pathStart: string; // building to begin a path
     pathEnd: string; // building to end a path
-    path: Segment[]; // path from pathStart to pathEnd to display on map
+    path: Edge[]; // path from pathStart to pathEnd to display on map
 }
 
 class App extends Component<{}, AppState> {
@@ -54,9 +45,9 @@ class App extends Component<{}, AppState> {
 
             let json = await response.json();
 
-            let temp: Segment[] = [];
-            for (let segment of json.path) {
-                temp.push({start: segment.start, end: segment.end});
+            let temp: Edge[] = [];
+            for (let edge of json.path) {
+                temp.push({x1: edge.start.x, y1: edge.start.y, x2: edge.end.x, y2: edge.end.y});
             }
 
             this.setState({

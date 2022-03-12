@@ -1,7 +1,8 @@
 import {Component} from "react";
+import {BuildingMap} from "./types";
 
 interface DropdownProps {
-    buildings: Map<string, string>; // buildings to choose from
+    buildings: BuildingMap; // buildings to choose from
     label: string; // label of the dropdown
     defaultOption: string; // dropdown option to initially display
     onDropdownChange(option: string): void; // called when user interacts with dropdown
@@ -9,11 +10,6 @@ interface DropdownProps {
 
 class Dropdown extends Component<DropdownProps, {}> {
     render() {
-        let buildings: JSX.Element[] = [];
-        for (let shortname of this.props.buildings.keys()) {
-            buildings.push(<option key={buildings.length} value={shortname}>{this.props.buildings.get(shortname)}</option>);
-        }
-
         return (
             <div>
                 <label>
@@ -21,7 +17,9 @@ class Dropdown extends Component<DropdownProps, {}> {
                     <select
                         value={this.props.defaultOption}
                         onChange={(e) => this.props.onDropdownChange(e.target.value)}>
-                        {buildings}
+                        {Object.entries(this.props.buildings).map((names: [string, string], index: number) => {
+                            return <option key={index} value={names[0]}>{names[1]}</option>
+                        })}
                     </select>
                 </label>
             </div>

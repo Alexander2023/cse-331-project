@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import Dropdown from "./Dropdown";
+import {BuildingMap} from "./types";
 
 interface ControlsProps {
     pathStart: string;
@@ -10,7 +11,7 @@ interface ControlsProps {
 }
 
 interface ControlsState {
-    buildings: Map<string, string>;
+    buildings: BuildingMap;
 }
 
 class Controls extends Component<ControlsProps, ControlsState> {
@@ -18,7 +19,7 @@ class Controls extends Component<ControlsProps, ControlsState> {
         super(props);
 
         this.state = {
-            buildings: new Map<string, string>()
+            buildings: {}
         }
     }
 
@@ -38,15 +39,8 @@ class Controls extends Component<ControlsProps, ControlsState> {
 
             let json = await response.json();
 
-            let temp: Map<string, string> = new Map<string, string>();
-            for (let shortName in json) { // +=+ change
-                temp.set(shortName, json[shortName]);
-            }
-
-            console.log(temp);
-
             this.setState({
-                buildings: temp
+                buildings: json
             })
         } catch (e) {
             console.log(e);
