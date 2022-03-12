@@ -23,8 +23,18 @@ const position: LatLngExpression = [UW_LATITUDE_CENTER, UW_LONGITUDE_CENTER];
 // you don't want to use this component, you're free to delete it or replace it
 // with your hw-lines Map
 
+interface Point {
+    x: number;
+    y: number;
+}
+
+interface Segment {
+    start: Point;
+    end: Point;
+}
+
 interface MapProps {
-  // TODO: Define the props of this component.
+    edges: Segment[]; // edges to draw on the map
 }
 
 interface MapState {}
@@ -42,12 +52,16 @@ class Map extends Component<MapProps, MapState> {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          {
-            // TODO: Render map lines here using the MapLine component. E.g.
-            // <MapLine key="key1" color="red" x1={1000} y1={1000} x2={2000} y2={2000}/>
-            // will draw a red line from the point 1000,1000 to 2000,2000 on the
-            // map. Note that key should be a unique key that only this MapLine has.
-          }
+          {this.props.edges.map((edge: Segment, index: number) => {
+              return <MapLine
+                  key={index}
+                  color={"red"}
+                  x1={edge.start.x}
+                  y1={edge.start.y}
+                  x2={edge.end.x}
+                  y2={edge.end.y}
+              />
+          })}
         </MapContainer>
       </div>
     );
