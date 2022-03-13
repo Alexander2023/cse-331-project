@@ -46,7 +46,7 @@ class App extends Component<{}, AppState> {
             let response = await fetch(`http://localhost:4567/path?start=${this.state.pathStart}&end=${this.state.pathEnd}`);
 
             if (!response.ok) {
-                console.log("Wrong status!");
+                alert("The status is wrong! Expected: 200, Was: " + response.status);
                 return;
             }
 
@@ -61,6 +61,7 @@ class App extends Component<{}, AppState> {
                 path: temp
             })
         } catch (e) {
+            alert("There was an error contacting the server.");
             console.log(e);
         }
     }

@@ -48,7 +48,7 @@ public class SparkServer {
         Spark.get("/buildings", new Route() {
             @Override
             public Object handle(Request request, Response response) throws Exception {
-                Map<String, String> names =  map.buildingNames();
+                Map<String, String> names = map.buildingNames();
 
                 Gson gson = new Gson();
                 return gson.toJson(names);

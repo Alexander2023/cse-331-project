@@ -39,7 +39,7 @@ class Controls extends Component<ControlsProps, ControlsState> {
             let response = await fetch("http://localhost:4567/buildings");
 
             if (!response.ok) {
-                console.log("Wrong status!");
+                alert("The status is wrong! Expected: 200, Was: " + response.status);
                 return;
             }
 
@@ -49,6 +49,7 @@ class Controls extends Component<ControlsProps, ControlsState> {
                 buildings: json
             })
         } catch (e) {
+            alert("There was an error contacting the server.");
             console.log(e);
         }
     }
