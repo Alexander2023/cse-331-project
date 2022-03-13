@@ -52,7 +52,7 @@ class App extends Component<{}, AppState> { // <- {} means no props.
       const lines: string[] = this.state.edgeText.split("\n");
 
       for (let line of lines) {
-          if (line.length == 0) {
+          if (line.length === 0) {
               continue; // Skips blank lines
           }
 

@@ -89,6 +89,18 @@ public class CampusMap implements ModelAPI {
             campusBuildings.put(building.getShortName(), building);
         }
 
+        populateCampusMap(paths);
+
+        checkRep();
+    }
+
+    /**
+     * Populates the map with edge data of paths between buildings
+     *
+     * @param paths data of the edges between buildings
+     * @spec.effects populates the map with paths
+     */
+    private void populateCampusMap(List<CampusPath> paths) {
         // Inv: campusMap contains all points of coordinates and
         // edges between points of all paths from 0 to i-1
         for (CampusPath path : paths) {
@@ -101,7 +113,6 @@ public class CampusMap implements ModelAPI {
             campusMap.addEdge(path.getDistance(), src, dst);
         }
 
-        checkRep();
     }
 
     @Override
