@@ -20,17 +20,15 @@ import {Edge} from "./types";
 // This defines the location of the map. These are the coordinates of the UW Seattle campus
 const position: LatLngExpression = [UW_LATITUDE_CENTER, UW_LONGITUDE_CENTER];
 
-// NOTE: This component is a suggestion for you to use, if you would like to. If
-// you don't want to use this component, you're free to delete it or replace it
-// with your hw-lines Map
-
 interface MapProps {
-    edges: Edge[]; // edges to draw on the map
+    path: Edge[]; // path from start to end buildings to display on map
 }
 
-interface MapState {}
-
-class Map extends Component<MapProps, MapState> {
+/**
+ * A component that will render a React Leaflet map with a path from user-selected
+ * start and end buildings drawn on it
+ */
+class Map extends Component<MapProps, {}> {
   render() {
     return (
       <div id="map">
@@ -43,15 +41,15 @@ class Map extends Component<MapProps, MapState> {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          {this.props.edges.map((edge: Edge, index: number) => {
+          {this.props.path.map((edge: Edge, index: number) => {
               return <MapLine
-                  key={index}
-                  color={"red"}
-                  x1={edge.x1}
-                  y1={edge.y1}
-                  x2={edge.x2}
-                  y2={edge.y2}
-              />
+                          key={index}
+                          color={"red"}
+                          x1={edge.x1}
+                          y1={edge.y1}
+                          x2={edge.x2}
+                          y2={edge.y2}
+                      />
           })}
         </MapContainer>
       </div>

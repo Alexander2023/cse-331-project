@@ -20,9 +20,13 @@ import {Edge} from "./types";
 interface AppState {
     pathStart: string; // building to begin a path
     pathEnd: string; // building to end a path
-    path: Edge[]; // path from pathStart to pathEnd to display on map
+    path: Edge[]; // path from start to end buildings to display on map
 }
 
+/**
+ * Top-level application that lets the user select a start and end building
+ * and view the path between them on a map of the UW Seattle campus
+ */
 class App extends Component<{}, AppState> {
     constructor(props: {}) {
         super(props);
@@ -34,6 +38,9 @@ class App extends Component<{}, AppState> {
         }
     }
 
+    /**
+     * Performs a fetch request for the path from pathStart to pathEnd
+     */
     requestPath = async () => {
         try {
             let response = await fetch(`http://localhost:4567/path?start=${this.state.pathStart}&end=${this.state.pathEnd}`);
@@ -58,18 +65,27 @@ class App extends Component<{}, AppState> {
         }
     }
 
+    /**
+     * Updates state and requests a new path based on changes to the start dropdown
+     */
     onStartDropdownChange = (option: string) => {
         this.setState({
             pathStart: option
         }, this.requestPath)
     }
 
+    /**
+     * Updates state and requests a new path based on changes to the end dropdown
+     */
     onEndDropdownChange = (option: string) => {
         this.setState({
             pathEnd: option
         }, this.requestPath)
     }
 
+    /**
+     * Resets component to its initial state when prompted to clear
+     */
     onClearPressed = () => {
         this.setState({
             pathStart: "CS2",
@@ -81,7 +97,7 @@ class App extends Component<{}, AppState> {
     render() {
         return (
             <div>
-                <Map edges={this.state.path}/>
+                <Map path={this.state.path}/>
                 <Controls
                     pathStart={this.state.pathStart}
                     pathEnd={this.state.pathEnd}
