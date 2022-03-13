@@ -19,7 +19,7 @@ interface ControlsState {
  * to display a path on the map
  */
 class Controls extends Component<ControlsProps, ControlsState> {
-    constructor(props: ControlsProps) { // +=+ check
+    constructor(props: ControlsProps) {
         super(props);
 
         this.state = {

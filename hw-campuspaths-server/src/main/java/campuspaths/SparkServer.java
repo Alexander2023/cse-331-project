@@ -23,10 +23,15 @@ import spark.Spark;
 
 import java.util.Map;
 
+/**
+ * SparkServer runs a server for sharing building and path finding information
+ * of the UW Seattle campus
+ */
 public class SparkServer {
-    private static CampusMap map;
 
-    // +=+ Mention that this is not an ADT
+    // This class does not represent an ADT
+
+    private static CampusMap map;
 
     public static void main(String[] args) {
         CORSFilter corsFilter = new CORSFilter();
@@ -38,32 +43,35 @@ public class SparkServer {
 
         map = new CampusMap();
 
+        // Endpoint which returns a JSON representation of a mapping of short names
+        // to long names of the buildings
         Spark.get("/buildings", new Route() {
             @Override
             public Object handle(Request request, Response response) throws Exception {
                 Map<String, String> names =  map.buildingNames();
 
                 Gson gson = new Gson();
-                String jsonResponse = gson.toJson(names);
-                return jsonResponse;
+                return gson.toJson(names);
             }
         });
 
+        // Endpoint which accepts query parameters for the start and end short building
+        // names and returns a JSON representation of the corresponding path
+        // Halts with special status 400 if either start or end query parameters are null
         Spark.get("/path", new Route() {
             @Override
             public Object handle(Request request, Response response) throws Exception {
-                String pathStart = request.queryParams("start");
-                String pathEnd = request.queryParams("end");
+                String startShortName = request.queryParams("start");
+                String endShortName = request.queryParams("end");
 
-                if (pathStart == null || pathEnd == null) {
+                if (startShortName == null || endShortName == null) {
                     Spark.halt(400, "must provide a start and end");
                 }
 
-                Path<Point> path = map.findShortestPath(pathStart, pathEnd);
+                Path<Point> path = map.findShortestPath(startShortName, endShortName);
 
                 Gson gson = new Gson();
-                String jsonResponse = gson.toJson(path);
-                return jsonResponse;
+                return gson.toJson(path);
             }
         });
     }
